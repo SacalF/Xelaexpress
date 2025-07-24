@@ -14,12 +14,11 @@ $error = '';
 
 // Registrar nuevo usuario
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['registrar'])) {
-    $nombre = trim($_POST['nombre'] ?? '');
     $usuario = trim($_POST['usuario'] ?? '');
     $password = $_POST['password'] ?? '';
     $rol = $_POST['rol'] ?? 'usuario';
 
-    if ($nombre && $usuario && $password && in_array($rol, ['admin', 'usuario'])) {
+    if ($usuario && $password && in_array($rol, ['admin', 'usuario'])) {
         // Verificar si el usuario ya existe
         $stmt = $conn->prepare('SELECT id FROM usuarios WHERE usuario = ? LIMIT 1');
         $stmt->bind_param('s', $usuario);
@@ -29,8 +28,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['registrar'])) {
             $error = 'El usuario ya existe.';
         } else {
             $hash = password_hash($password, PASSWORD_DEFAULT);
-            $stmt2 = $conn->prepare('INSERT INTO usuarios (usuario, password, nombre, rol) VALUES (?, ?, ?, ?)');
-            $stmt2->bind_param('ssss', $usuario, $hash, $nombre, $rol);
+            $stmt2 = $conn->prepare('INSERT INTO usuarios (usuario, password, rol) VALUES (?, ?, ?)');
+            $stmt2->bind_param('sss', $usuario, $hash, $rol);
             if ($stmt2->execute()) {
                 $mensaje = 'Usuario registrado correctamente.';
             } else {
@@ -64,7 +63,7 @@ if (isset($_GET['eliminar']) && is_numeric($_GET['eliminar'])) {
 
 // Obtener lista de usuarios
 $usuarios = [];
-$result = $conn->query('SELECT id, usuario, nombre, rol FROM usuarios ORDER BY id ASC');
+$result = $conn->query('SELECT id, usuario, rol, creado_en FROM usuarios ORDER BY id ASC');
 if ($result) {
     while ($row = $result->fetch_assoc()) {
         $usuarios[] = $row;
@@ -96,9 +95,6 @@ if ($result) {
             <form method="post">
                 <div class="row g-2">
                     <div class="col-md-3">
-                        <input type="text" name="nombre" class="form-control" placeholder="Nombre completo" required>
-                    </div>
-                    <div class="col-md-3">
                         <input type="text" name="usuario" class="form-control" placeholder="Usuario" required>
                     </div>
                     <div class="col-md-3">
@@ -126,8 +122,8 @@ if ($result) {
                     <tr>
                         <th>ID</th>
                         <th>Usuario</th>
-                        <th>Nombre</th>
                         <th>Rol</th>
+                        <th>Creado en</th>
                         <th>Acciones</th>
                     </tr>
                 </thead>
@@ -136,8 +132,8 @@ if ($result) {
                     <tr>
                         <td><?= htmlspecialchars($u['id']) ?></td>
                         <td><?= htmlspecialchars($u['usuario']) ?></td>
-                        <td><?= htmlspecialchars($u['nombre']) ?></td>
                         <td><?= htmlspecialchars($u['rol']) ?></td>
+                        <td><?= htmlspecialchars($u['creado_en']) ?></td>
                         <td>
                             <?php if ($u['id'] != $_SESSION['usuario_id']): ?>
                                 <a href="?eliminar=<?= $u['id'] ?>" class="btn btn-sm btn-danger" onclick="return confirm('¿Eliminar este usuario?')">Eliminar</a>
