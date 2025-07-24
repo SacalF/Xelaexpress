@@ -104,6 +104,9 @@ if ($res) {
             <div class="col-md-3 mb-3">
                 <a href="modules/usuarios/" class="btn btn-primary w-100 py-3">Usuarios</a>
             </div>
+            <div class="col-md-3 mb-3">
+                <a href="modules/clientes/" class="btn btn-primary w-100 py-3">Clientes</a>
+            </div>
         </div>
     </div>
     <!-- Gráficas -->
