@@ -20,15 +20,14 @@ if ($res) {
     }
 }
 
-// **MODIFICADO: Obtener clientes para el formulario (incluyendo apellido)**
+// Obtener clientes para el formulario (incluyendo apellido)
 $clientes = [];
-$res_clientes = $conn->query('SELECT id, nombre, apellido FROM clientes ORDER BY nombre ASC, apellido ASC'); // Ordered by both for clarity
+$res_clientes = $conn->query('SELECT id, nombre, apellido FROM clientes ORDER BY nombre ASC, apellido ASC');
 if ($res_clientes) {
     while ($row_cliente = $res_clientes->fetch_assoc()) {
         $clientes[] = $row_cliente;
     }
 }
-
 
 // Registrar nueva venta
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['registrar_venta'])) {
@@ -65,7 +64,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['registrar_venta'])) {
             }
         }
     }
-
 
     if (!$error && $total > 0 && count($detalles) > 0) {
         // Registrar venta
@@ -113,8 +111,12 @@ if ($res) {
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>Ventas - XelaExpress</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mi Página - XelaExpress</title>
+
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <link rel="stylesheet" href="style.css"> 
     <script>
     function agregarProducto() {
         const productosLista = document.getElementById('productos-lista');
