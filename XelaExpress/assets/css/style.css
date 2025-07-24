@@ -1,0 +1,16 @@
+body {
+    background: linear-gradient(135deg, #f8fafc 0%, #e0e7ff 100%);
+}
+.display-3 {
+    color: #2d3a4b;
+    letter-spacing: 2px;
+}
+.btn-primary {
+    background: #4f8cff;
+    border: none;
+    box-shadow: 0 2px 8px rgba(79,140,255,0.15);
+    transition: background 0.2s;
+}
+.btn-primary:hover {
+    background: #2563eb;
+} 
