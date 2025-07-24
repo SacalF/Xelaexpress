@@ -20,39 +20,57 @@ if ($res) {
     }
 }
 
+// *MODIFICADO: Obtener clientes para el formulario (incluyendo apellido)*
+$clientes = [];
+$res_clientes = $conn->query('SELECT id, nombre, apellido FROM clientes ORDER BY nombre ASC, apellido ASC'); // Ordered by both for clarity
+if ($res_clientes) {
+    while ($row_cliente = $res_clientes->fetch_assoc()) {
+        $clientes[] = $row_cliente;
+    }
+}
+
+
 // Registrar nueva venta
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['registrar_venta'])) {
     $items = $_POST['items'] ?? [];
     $total = 0;
     $detalles = [];
-    foreach ($items as $item) {
-        $producto_id = intval($item['producto_id']);
-        $cantidad = intval($item['cantidad']);
-        if ($producto_id && $cantidad > 0) {
-            // Obtener precio actual y stock
-            $stmt = $conn->prepare('SELECT precio, stock FROM productos WHERE id = ?');
-            $stmt->bind_param('i', $producto_id);
-            $stmt->execute();
-            $stmt->bind_result($precio, $stock);
-            if ($stmt->fetch()) {
-                if ($cantidad > $stock) {
-                    $error = 'Stock insuficiente para uno de los productos.';
-                    break;
+    $cliente_id = isset($_POST['cliente_id']) ? intval($_POST['cliente_id']) : null;
+
+    if (empty($items)) {
+        $error = 'Debes agregar al menos un producto.';
+    } else {
+        foreach ($items as $item) {
+            $producto_id = intval($item['producto_id']);
+            $cantidad = intval($item['cantidad']);
+            if ($producto_id && $cantidad > 0) {
+                // Obtener precio actual y stock
+                $stmt = $conn->prepare('SELECT precio, stock FROM productos WHERE id = ?');
+                $stmt->bind_param('i', $producto_id);
+                $stmt->execute();
+                $stmt->bind_result($precio, $stock);
+                if ($stmt->fetch()) {
+                    if ($cantidad > $stock) {
+                        $error = 'Stock insuficiente para uno de los productos.';
+                        break;
+                    }
+                    $total += $precio * $cantidad;
+                    $detalles[] = [
+                        'producto_id' => $producto_id,
+                        'cantidad' => $cantidad,
+                        'precio_unitario' => $precio
+                    ];
                 }
-                $total += $precio * $cantidad;
-                $detalles[] = [
-                    'producto_id' => $producto_id,
-                    'cantidad' => $cantidad,
-                    'precio_unitario' => $precio
-                ];
+                $stmt->close();
             }
-            $stmt->close();
         }
     }
+
+
     if (!$error && $total > 0 && count($detalles) > 0) {
         // Registrar venta
-        $stmt = $conn->prepare('INSERT INTO ventas (usuario_id, total) VALUES (?, ?)');
-        $stmt->bind_param('id', $_SESSION['usuario_id'], $total);
+        $stmt = $conn->prepare('INSERT INTO ventas (usuario_id, cliente_id, total) VALUES (?, ?, ?)');
+        $stmt->bind_param('iid', $_SESSION['usuario_id'], $cliente_id, $total);
         if ($stmt->execute()) {
             $venta_id = $stmt->insert_id;
             // Insertar detalles y actualizar stock
@@ -69,7 +87,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['registrar_venta'])) {
             }
             $mensaje = 'Venta registrada correctamente.';
         } else {
-            $error = 'Error al registrar la venta.';
+            $error = 'Error al registrar la venta: ' . $stmt->error;
         }
         $stmt->close();
     } elseif (!$error) {
@@ -79,7 +97,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['registrar_venta'])) {
 
 // Obtener lista de ventas
 $ventas = [];
-$res = $conn->query('SELECT v.id, v.fecha, v.total, u.usuario FROM ventas v JOIN usuarios u ON v.usuario_id = u.id ORDER BY v.id DESC');
+$res = $conn->query('SELECT v.id, v.fecha, v.total, u.usuario, c.nombre AS nombre_cliente, c.apellido AS apellido_cliente
+                     FROM ventas v
+                     JOIN usuarios u ON v.usuario_id = u.id
+                     LEFT JOIN clientes c ON v.cliente_id = c.id
+                     ORDER BY v.id DESC');
 if ($res) {
     while ($row = $res->fetch_assoc()) {
         $ventas[] = $row;
@@ -95,9 +117,19 @@ if ($res) {
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <script>
     // Script para agregar/quitar productos dinámicamente
+    let productoIndex = 1;
     function agregarProducto() {
         const row = document.querySelector('.producto-row').cloneNode(true);
+        // Limpiar valores
         row.querySelectorAll('input').forEach(input => input.value = '');
+        row.querySelectorAll('select').forEach(select => select.selectedIndex = 0);
+        // Cambiar los nombres de los campos con el nuevo índice
+        row.querySelectorAll('select, input').forEach(el => {
+            if (el.name) {
+                el.name = el.name.replace(/items\[\d+\]/, 'items[' + productoIndex + ']');
+            }
+        });
+        productoIndex++;
         document.getElementById('productos-lista').appendChild(row);
     }
     function quitarProducto(btn) {
@@ -124,6 +156,19 @@ if ($res) {
         <div class="card-header">Registrar nueva venta</div>
         <div class="card-body">
             <form method="post">
+                <div class="mb-3">
+                    <label for="cliente_id" class="form-label">Cliente</label>
+                    <select name="cliente_id" id="cliente_id" class="form-select">
+                        <option value="">Selecciona un cliente (Opcional)</option>
+                        <?php foreach ($clientes as $c): ?>
+                            <option value="<?= $c['id'] ?>">
+                                <?= htmlspecialchars($c['nombre']) ?> <?= htmlspecialchars($c['apellido']) ?>
+                            </option>
+                        <?php endforeach; ?>
+                    </select>
+                </div>
+                <hr>
+                <h5 class="mb-3">Productos para la venta</h5>
                 <div id="productos-lista">
                     <div class="row g-2 align-items-end producto-row mb-2">
                         <div class="col-md-5">
@@ -159,6 +204,7 @@ if ($res) {
                         <th>ID</th>
                         <th>Fecha</th>
                         <th>Usuario</th>
+                        <th>Cliente</th>
                         <th>Total</th>
                     </tr>
                 </thead>
@@ -168,6 +214,15 @@ if ($res) {
                         <td><?= htmlspecialchars($v['id']) ?></td>
                         <td><?= htmlspecialchars($v['fecha']) ?></td>
                         <td><?= htmlspecialchars($v['usuario']) ?></td>
+                        <td>
+                            <?php
+                            if (!empty($v['nombre_cliente']) || !empty($v['apellido_cliente'])) {
+                                echo htmlspecialchars(trim($v['nombre_cliente'] . ' ' . $v['apellido_cliente']));
+                            } else {
+                                echo 'N/A';
+                            }
+                            ?>
+                        </td>
                         <td>Q <?= number_format($v['total'], 2) ?></td>
                     </tr>
                 <?php endforeach; ?>
@@ -177,4 +232,4 @@ if ($res) {
     </div>
 </div>
 </body>
-</html> 
+</html>
