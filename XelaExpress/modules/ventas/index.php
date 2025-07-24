@@ -20,9 +20,9 @@ if ($res) {
     }
 }
 
-// **NUEVO: Obtener clientes para el formulario**
+// **MODIFICADO: Obtener clientes para el formulario (incluyendo apellido)**
 $clientes = [];
-$res_clientes = $conn->query('SELECT id, nombre FROM clientes ORDER BY nombre ASC');
+$res_clientes = $conn->query('SELECT id, nombre, apellido FROM clientes ORDER BY nombre ASC, apellido ASC'); // Ordered by both for clarity
 if ($res_clientes) {
     while ($row_cliente = $res_clientes->fetch_assoc()) {
         $clientes[] = $row_cliente;
@@ -35,7 +35,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['registrar_venta'])) {
     $items = $_POST['items'] ?? [];
     $total = 0;
     $detalles = [];
-    $cliente_id = isset($_POST['cliente_id']) ? intval($_POST['cliente_id']) : null; // **NUEVO: Obtener cliente_id**
+    $cliente_id = isset($_POST['cliente_id']) ? intval($_POST['cliente_id']) : null;
 
     if (empty($items)) {
         $error = 'Debes agregar al menos un producto.';
@@ -69,7 +69,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['registrar_venta'])) {
 
     if (!$error && $total > 0 && count($detalles) > 0) {
         // Registrar venta
-        // **MODIFICADO: Se agrega cliente_id a la inserción de ventas**
         $stmt = $conn->prepare('INSERT INTO ventas (usuario_id, cliente_id, total) VALUES (?, ?, ?)');
         $stmt->bind_param('iid', $_SESSION['usuario_id'], $cliente_id, $total);
         if ($stmt->execute()) {
@@ -88,18 +87,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['registrar_venta'])) {
             }
             $mensaje = 'Venta registrada correctamente.';
         } else {
-            $error = 'Error al registrar la venta: ' . $stmt->error; // Añadir el error para depuración
+            $error = 'Error al registrar la venta: ' . $stmt->error;
         }
         $stmt->close();
-    } elseif (!$error) { // This condition was only hit if $error was not set
-        $error = 'Debes agregar al menos un producto válido.'; // This message applies if total is 0 or no valid products added
+    } elseif (!$error) {
+        $error = 'Debes agregar al menos un producto válido.';
     }
 }
 
 // Obtener lista de ventas
-// **MODIFICADO: Se incluye el nombre del cliente en la lista de ventas**
 $ventas = [];
-$res = $conn->query('SELECT v.id, v.fecha, v.total, u.usuario, c.nombre AS nombre_cliente
+$res = $conn->query('SELECT v.id, v.fecha, v.total, u.usuario, c.nombre AS nombre_cliente, c.apellido AS apellido_cliente
                      FROM ventas v
                      JOIN usuarios u ON v.usuario_id = u.id
                      LEFT JOIN clientes c ON v.cliente_id = c.id
@@ -118,17 +116,14 @@ if ($res) {
     <title>Ventas - XelaExpress</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <script>
-    // Script para agregar/quitar productos dinámicamente
     function agregarProducto() {
         const productosLista = document.getElementById('productos-lista');
         const originalRow = document.querySelector('.producto-row');
         const newRow = originalRow.cloneNode(true);
 
-        // Clear values and update names for new row
-        const index = productosLista.children.length; // Get current number of product rows
+        const index = productosLista.children.length;
         newRow.querySelectorAll('select, input').forEach(input => {
             input.value = '';
-            // Update name attributes for unique indexing
             const oldName = input.name;
             if (oldName) {
                 input.name = oldName.replace(/\[\d+\]/, `[${index}]`);
@@ -167,7 +162,7 @@ if ($res) {
                         <option value="">Selecciona un cliente (Opcional)</option>
                         <?php foreach ($clientes as $c): ?>
                             <option value="<?= $c['id'] ?>">
-                                <?= htmlspecialchars($c['nombre']) ?>
+                                <?= htmlspecialchars($c['nombre']) ?> <?= htmlspecialchars($c['apellido']) ?>
                             </option>
                         <?php endforeach; ?>
                     </select>
@@ -209,7 +204,8 @@ if ($res) {
                         <th>ID</th>
                         <th>Fecha</th>
                         <th>Usuario</th>
-                        <th>Cliente</th> <th>Total</th>
+                        <th>Cliente</th>
+                        <th>Total</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -218,7 +214,16 @@ if ($res) {
                         <td><?= htmlspecialchars($v['id']) ?></td>
                         <td><?= htmlspecialchars($v['fecha']) ?></td>
                         <td><?= htmlspecialchars($v['usuario']) ?></td>
-                        <td><?= htmlspecialchars($v['nombre_cliente'] ?? 'N/A') ?></td> <td>Q <?= number_format($v['total'], 2) ?></td>
+                        <td>
+                            <?php
+                            if (!empty($v['nombre_cliente']) || !empty($v['apellido_cliente'])) {
+                                echo htmlspecialchars(trim($v['nombre_cliente'] . ' ' . $v['apellido_cliente']));
+                            } else {
+                                echo 'N/A';
+                            }
+                            ?>
+                        </td>
+                        <td>Q <?= number_format($v['total'], 2) ?></td>
                     </tr>
                 <?php endforeach; ?>
                 </tbody>
