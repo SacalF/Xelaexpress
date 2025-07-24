@@ -20,39 +20,58 @@ if ($res) {
     }
 }
 
+// **NUEVO: Obtener clientes para el formulario**
+$clientes = [];
+$res_clientes = $conn->query('SELECT id, nombre FROM clientes ORDER BY nombre ASC');
+if ($res_clientes) {
+    while ($row_cliente = $res_clientes->fetch_assoc()) {
+        $clientes[] = $row_cliente;
+    }
+}
+
+
 // Registrar nueva venta
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['registrar_venta'])) {
     $items = $_POST['items'] ?? [];
     $total = 0;
     $detalles = [];
-    foreach ($items as $item) {
-        $producto_id = intval($item['producto_id']);
-        $cantidad = intval($item['cantidad']);
-        if ($producto_id && $cantidad > 0) {
-            // Obtener precio actual y stock
-            $stmt = $conn->prepare('SELECT precio, stock FROM productos WHERE id = ?');
-            $stmt->bind_param('i', $producto_id);
-            $stmt->execute();
-            $stmt->bind_result($precio, $stock);
-            if ($stmt->fetch()) {
-                if ($cantidad > $stock) {
-                    $error = 'Stock insuficiente para uno de los productos.';
-                    break;
+    $cliente_id = isset($_POST['cliente_id']) ? intval($_POST['cliente_id']) : null; // **NUEVO: Obtener cliente_id**
+
+    if (empty($items)) {
+        $error = 'Debes agregar al menos un producto.';
+    } else {
+        foreach ($items as $item) {
+            $producto_id = intval($item['producto_id']);
+            $cantidad = intval($item['cantidad']);
+            if ($producto_id && $cantidad > 0) {
+                // Obtener precio actual y stock
+                $stmt = $conn->prepare('SELECT precio, stock FROM productos WHERE id = ?');
+                $stmt->bind_param('i', $producto_id);
+                $stmt->execute();
+                $stmt->bind_result($precio, $stock);
+                if ($stmt->fetch()) {
+                    if ($cantidad > $stock) {
+                        $error = 'Stock insuficiente para uno de los productos.';
+                        break;
+                    }
+                    $total += $precio * $cantidad;
+                    $detalles[] = [
+                        'producto_id' => $producto_id,
+                        'cantidad' => $cantidad,
+                        'precio_unitario' => $precio
+                    ];
                 }
-                $total += $precio * $cantidad;
-                $detalles[] = [
-                    'producto_id' => $producto_id,
-                    'cantidad' => $cantidad,
-                    'precio_unitario' => $precio
-                ];
+                $stmt->close();
             }
-            $stmt->close();
         }
     }
+
+
     if (!$error && $total > 0 && count($detalles) > 0) {
         // Registrar venta
-        $stmt = $conn->prepare('INSERT INTO ventas (usuario_id, total) VALUES (?, ?)');
-        $stmt->bind_param('id', $_SESSION['usuario_id'], $total);
+        // **MODIFICADO: Se agrega cliente_id a la inserción de ventas**
+        $stmt = $conn->prepare('INSERT INTO ventas (usuario_id, cliente_id, total) VALUES (?, ?, ?)');
+        $stmt->bind_param('iid', $_SESSION['usuario_id'], $cliente_id, $total);
         if ($stmt->execute()) {
             $venta_id = $stmt->insert_id;
             // Insertar detalles y actualizar stock
@@ -69,17 +88,22 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['registrar_venta'])) {
             }
             $mensaje = 'Venta registrada correctamente.';
         } else {
-            $error = 'Error al registrar la venta.';
+            $error = 'Error al registrar la venta: ' . $stmt->error; // Añadir el error para depuración
         }
         $stmt->close();
-    } elseif (!$error) {
-        $error = 'Debes agregar al menos un producto válido.';
+    } elseif (!$error) { // This condition was only hit if $error was not set
+        $error = 'Debes agregar al menos un producto válido.'; // This message applies if total is 0 or no valid products added
     }
 }
 
 // Obtener lista de ventas
+// **MODIFICADO: Se incluye el nombre del cliente en la lista de ventas**
 $ventas = [];
-$res = $conn->query('SELECT v.id, v.fecha, v.total, u.usuario FROM ventas v JOIN usuarios u ON v.usuario_id = u.id ORDER BY v.id DESC');
+$res = $conn->query('SELECT v.id, v.fecha, v.total, u.usuario, c.nombre AS nombre_cliente
+                     FROM ventas v
+                     JOIN usuarios u ON v.usuario_id = u.id
+                     LEFT JOIN clientes c ON v.cliente_id = c.id
+                     ORDER BY v.id DESC');
 if ($res) {
     while ($row = $res->fetch_assoc()) {
         $ventas[] = $row;
@@ -96,10 +120,23 @@ if ($res) {
     <script>
     // Script para agregar/quitar productos dinámicamente
     function agregarProducto() {
-        const row = document.querySelector('.producto-row').cloneNode(true);
-        row.querySelectorAll('input').forEach(input => input.value = '');
-        document.getElementById('productos-lista').appendChild(row);
+        const productosLista = document.getElementById('productos-lista');
+        const originalRow = document.querySelector('.producto-row');
+        const newRow = originalRow.cloneNode(true);
+
+        // Clear values and update names for new row
+        const index = productosLista.children.length; // Get current number of product rows
+        newRow.querySelectorAll('select, input').forEach(input => {
+            input.value = '';
+            // Update name attributes for unique indexing
+            const oldName = input.name;
+            if (oldName) {
+                input.name = oldName.replace(/\[\d+\]/, `[${index}]`);
+            }
+        });
+        productosLista.appendChild(newRow);
     }
+
     function quitarProducto(btn) {
         const rows = document.querySelectorAll('.producto-row');
         if (rows.length > 1) {
@@ -124,6 +161,19 @@ if ($res) {
         <div class="card-header">Registrar nueva venta</div>
         <div class="card-body">
             <form method="post">
+                <div class="mb-3">
+                    <label for="cliente_id" class="form-label">Cliente</label>
+                    <select name="cliente_id" id="cliente_id" class="form-select">
+                        <option value="">Selecciona un cliente (Opcional)</option>
+                        <?php foreach ($clientes as $c): ?>
+                            <option value="<?= $c['id'] ?>">
+                                <?= htmlspecialchars($c['nombre']) ?>
+                            </option>
+                        <?php endforeach; ?>
+                    </select>
+                </div>
+                <hr>
+                <h5 class="mb-3">Productos para la venta</h5>
                 <div id="productos-lista">
                     <div class="row g-2 align-items-end producto-row mb-2">
                         <div class="col-md-5">
@@ -159,7 +209,7 @@ if ($res) {
                         <th>ID</th>
                         <th>Fecha</th>
                         <th>Usuario</th>
-                        <th>Total</th>
+                        <th>Cliente</th> <th>Total</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -168,7 +218,7 @@ if ($res) {
                         <td><?= htmlspecialchars($v['id']) ?></td>
                         <td><?= htmlspecialchars($v['fecha']) ?></td>
                         <td><?= htmlspecialchars($v['usuario']) ?></td>
-                        <td>Q <?= number_format($v['total'], 2) ?></td>
+                        <td><?= htmlspecialchars($v['nombre_cliente'] ?? 'N/A') ?></td> <td>Q <?= number_format($v['total'], 2) ?></td>
                     </tr>
                 <?php endforeach; ?>
                 </tbody>
@@ -177,4 +227,4 @@ if ($res) {
     </div>
 </div>
 </body>
-</html> 
+</html>

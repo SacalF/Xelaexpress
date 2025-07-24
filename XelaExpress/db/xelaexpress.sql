@@ -2,6 +2,17 @@
 CREATE DATABASE IF NOT EXISTS xelaexpress;
 USE xelaexpress;
 
+-- Tabla de clientes
+CREATE TABLE IF NOT EXISTS clientes (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    nombre VARCHAR(100) NOT NULL,
+    apellido VARCHAR(100) NOT NULL,
+    telefono VARCHAR(15),
+    correo VARCHAR(100),
+    direccion TEXT,
+    fecha_registro TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
 -- Tabla de usuarios
 CREATE TABLE IF NOT EXISTS usuarios (
     id INT AUTO_INCREMENT PRIMARY KEY,
