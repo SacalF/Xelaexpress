@@ -20,6 +20,16 @@ if ($res) {
     }
 }
 
+// **MODIFICADO: Obtener clientes para el formulario (incluyendo apellido)**
+$clientes = [];
+$res_clientes = $conn->query('SELECT id, nombre, apellido FROM clientes ORDER BY nombre ASC, apellido ASC'); // Ordered by both for clarity
+if ($res_clientes) {
+    while ($row_cliente = $res_clientes->fetch_assoc()) {
+        $clientes[] = $row_cliente;
+    }
+}
+
+
 // Registrar nueva venta
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['registrar_venta'])) {
     $items = $_POST['items'] ?? [];
@@ -106,11 +116,20 @@ if ($res) {
     <title>Ventas - XelaExpress</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <script>
-    // Script para agregar/quitar productos dinámicamente
     function agregarProducto() {
-        const row = document.querySelector('.producto-row').cloneNode(true);
-        row.querySelectorAll('input').forEach(input => input.value = '');
-        document.getElementById('productos-lista').appendChild(row);
+        const productosLista = document.getElementById('productos-lista');
+        const originalRow = document.querySelector('.producto-row');
+        const newRow = originalRow.cloneNode(true);
+
+        const index = productosLista.children.length;
+        newRow.querySelectorAll('select, input').forEach(input => {
+            input.value = '';
+            const oldName = input.name;
+            if (oldName) {
+                input.name = oldName.replace(/\[\d+\]/, `[${index}]`);
+            }
+        });
+        productosLista.appendChild(newRow);
     }
 
     function quitarProducto(btn) {
