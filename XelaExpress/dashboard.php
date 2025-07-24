@@ -233,12 +233,16 @@ if ($res) {
         .delay-4 { animation-delay: 0.4s; }
     </style>
 </head>
+</head>
 <body class="bg-light">
-    <nav class="navbar navbar-expand-lg navbar-light">
+    <nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm">
         <div class="container">
-            <a class="navbar-brand fw-bold" href="#"><i class="fas fa-rocket me-2"></i>XelaExpress</a>
+            <a class="navbar-brand fw-bold d-flex align-items-center" href="#">
+                <img src="assets/img/xela1.png" alt="Logo XelaExpress" width="30" height="30" class="me-2">
+                XelaExpress
+            </a>
             <div class="d-flex">
-                <span class="me-3 text-white d-flex align-items-center">
+                <span class="me-3 text-dark d-flex align-items-center">
                     <span class="user-greeting">
                         <i class="fas fa-user-circle"></i>
                         Hola, <?php echo htmlspecialchars($_SESSION['usuario']); ?>
@@ -250,10 +254,11 @@ if ($res) {
             </div>
         </div>
     </nav>
+
     
     <div class="container py-4">
         <div class="welcome-section text-center mb-5">
-            <img src = "assets/img/logo.jpeg" alt = "Logo XelaExpress" class="img-fluid mb-3" style="max-width: 150px; margin-bottom: 1rem;">
+            <img src = "assets/img/Xela1.png" alt = "Logo XelaExpress" class="img-fluid mb-3" style="max-width: 150px; margin-bottom: 1rem;">
             <h1 class="mb-3">Bienvenido a XelaExpress</h1>
             <p class="mb-0">Tu panel de control para gestionar ventas, productos, usuarios y clientes de manera eficiente</p>
         </div>
