@@ -47,6 +47,7 @@ if ($res) {
     <title>Dashboard - XelaExpress</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
     <style>
         :root {
             --primary: #4a6cf7;
@@ -234,28 +235,11 @@ if ($res) {
     </style>
 </head>
 <body class="bg-light">
-    <nav class="navbar navbar-expand-lg navbar-light">
-        <div class="container"> 
-            <img src = "assets/img/xela1.png" alt = "Logo XelaExpress" class="navbar-brand fw-bold" style="max-width: 150px; margin-bottom: 1rem;">
-            <h1 class="text-white text-center">XelaExpress</h1>
-            <div class="d-flex">
-                <span class="me-3 text-white d-flex align-items-center">
-                    <span class="user-greeting">
-                        <i class="fas fa-user-circle"></i>
-                        Hola, <?php echo htmlspecialchars($_SESSION['usuario']); ?>
-                    </span>
-                </span>
-                <a href="logout.php" class="btn btn-light">
-                    <i class="fas fa-sign-out-alt me-1"></i> Salir
-                </a>
-            </div>
-        </div>
-    </nav>
+    <?php include 'templates/navbar.php'; ?>
     
     <div class="container py-4">
         <div class="welcome-section text-center mb-5">
-            <h1 class="mb-3">Bienvenido a XelaExpress</h1>
-            
+            <h1 class="mb-3">Bienvenido</h1>
             <p class="mb-0">Tu panel de control para gestionar ventas, productos, usuarios y clientes de manera eficiente</p>
         </div>
         
@@ -489,5 +473,7 @@ if ($res) {
         }
     });
     </script>
+    
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
-</html>
+</html> 
