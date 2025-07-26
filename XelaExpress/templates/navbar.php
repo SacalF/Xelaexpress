@@ -1,6 +1,9 @@
 <nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm mb-4">
     <div class="container">
-        <a class="navbar-brand fw-bold" href="/dashboard.php">XelaExpress</a>
+        <a class="navbar-brand fw-bold" href="/dashboard.php">
+        <img src="tu_logo.png" alt="Logo" class="navbar-logo">
+            XelaExpress
+        </a>
         <div class="d-flex">
             <?php if (isset($_SESSION['usuario'])): ?>
                 <span class="me-3">Hola, <?php echo htmlspecialchars($_SESSION['usuario']); ?></span>
