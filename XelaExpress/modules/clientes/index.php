@@ -97,14 +97,21 @@ if ($result) {
     <title>Mi Página - XelaExpress</title>
 
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+<<<<<<< HEAD
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
     <link rel="stylesheet" href="style.css"> 
     </head>
+=======
+    <link rel="stylesheet" href="../../assets/css/style.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
+</head>
+>>>>>>> a0966ee041d9d80d21694df7270625ca7a4dc206
 <body class="bg-light">
 <div class="container py-4">
-    <h2 class="mb-4">Gestión de Clientes</h2>
+    <img src="../../assets/img/logo.png" alt="Logo XelaExpress" class="logo-xela mb-3" style="max-width:50px;max-height:50px;display:block;margin:20px auto 10px auto;">
+    <h2 class="mb-4 display-3">Gestión de Clientes <i class="bi bi-people-fill text-danger"></i></h2>
     <a href="../../dashboard.php" class="btn btn-secondary mb-3">Volver al dashboard</a>
 
     <?php if ($mensaje): ?>

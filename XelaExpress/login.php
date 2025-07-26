@@ -41,6 +41,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <body class="bg-light d-flex align-items-center" style="min-height:100vh;">
     <div class="container" style="max-width:400px;">
         <div class="card shadow-sm p-4">
+            <img src="assets/img/logo.png" alt="Logo XelaExpress" class="logo-xela">
             <h2 class="mb-4 text-center">Iniciar Sesión</h2>
             <?php if ($error): ?>
                 <div class="alert alert-danger"> <?= $error ?> </div>
