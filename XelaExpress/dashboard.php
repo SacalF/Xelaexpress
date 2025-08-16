@@ -47,242 +47,62 @@ if ($res) {
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
-    <style>
-        :root {
-            --primary: #4a6cf7;
-            --secondary: #6a11cb;
-            --success: #00c9a7;
-            --info: #00d2ff;
-            --warning: #ff9a44;
-            --danger: #ff3860;
-            --dark: #1e293b;
-            --light: #f8fafc;
-        }
-        
-        body {
-            background-color: #f0f4f8;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            transition: all 0.3s ease;
-        }
-        
-        .navbar {
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-        }
-        
-        .navbar-brand {
-            font-weight: 700;
-            letter-spacing: 0.5px;
-            color: white !important;
-        }
-        
-        .card {
-            border: none;
-            border-radius: 12px;
-            overflow: hidden;
-            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.05);
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-            background-color: white;
-        }
-        
-        .card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 12px 20px rgba(0, 0, 0, 0.1);
-        }
-        
-        .card-header {
-            background-color: white;
-            border-bottom: 1px solid #e2e8f0;
-            padding: 1.25rem 1.5rem;
-            font-weight: 600;
-            color: var(--dark);
-        }
-        
-        .card-body {
-            padding: 1.5rem;
-        }
-        
-        .stat-card {
-            position: relative;
-            overflow: hidden;
-        }
-        
-        .stat-card::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 4px;
-        }
-        
-        .stat-card:nth-child(1)::before { background: linear-gradient(90deg, var(--primary), var(--info)); }
-        .stat-card:nth-child(2)::before { background: linear-gradient(90deg, var(--success), #00d2ff); }
-        .stat-card:nth-child(3)::before { background: linear-gradient(90deg, var(--warning), #ff9a44); }
-        .stat-card:nth-child(4)::before { background: linear-gradient(90deg, #ff3860, #ff758c); }
-        
-        .display-6 {
-            font-weight: 700;
-            color: var(--dark);
-            margin-top: 0.5rem;
-        }
-        
-        .btn-module {
-            background: white;
-            border: none;
-            border-radius: 12px;
-            padding: 1.5rem 1rem;
-            font-weight: 600;
-            color: var(--dark);
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
-            transition: all 0.3s ease;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            height: 100%;
-        }
-        
-        .btn-module:hover {
-            background: linear-gradient(135deg, var(--primary), var(--secondary));
-            color: white;
-            transform: translateY(-3px);
-            box-shadow: 0 8px 20px rgba(74, 108, 247, 0.3);
-        }
-        
-        .btn-module i {
-            font-size: 2.5rem;
-            margin-bottom: 1rem;
-            transition: all 0.3s ease;
-        }
-        
-        .btn-module:hover i {
-            transform: scale(1.1);
-        }
-        
-        .chart-container {
-            position: relative;
-            height: 300px;
-            width: 100%;
-        }
-        
-        .welcome-section {
-            background: linear-gradient(135deg, var(--primary), var(--secondary));
-            border-radius: 16px;
-            padding: 2.5rem;
-            margin-bottom: 2.5rem;
-            color: white;
-            box-shadow: 0 10px 25px rgba(74, 108, 247, 0.25);
-            position: relative;
-            overflow: hidden;
-        }
-        
-        .welcome-section::before {
-            content: '';
-            position: absolute;
-            top: -50%;
-            right: -50%;
-            width: 200%;
-            height: 200%;
-            background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0) 70%);
-            z-index: 1;
-        }
-        
-        .welcome-section h1 {
-            position: relative;
-            z-index: 2;
-            font-weight: 700;
-            text-shadow: 0 2px 4px rgba(0,0,0,0.1);
-        }
-        
-        .welcome-section p {
-            position: relative;
-            z-index: 2;
-            font-size: 1.2rem;
-            max-width: 600px;
-            margin: 0 auto;
-            opacity: 0.9;
-        }
-        
-        .user-greeting {
-            background: rgba(255, 255, 255, 0.15);
-            border-radius: 12px;
-            padding: 0.5rem 1rem;
-            display: inline-flex;
-            align-items: center;
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-        }
-        
-        .user-greeting i {
-            margin-right: 0.5rem;
-        }
-        
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-        
-        .fade-in {
-            animation: fadeIn 0.6s ease-out forwards;
-        }
-        
-        .delay-1 { animation-delay: 0.1s; }
-        .delay-2 { animation-delay: 0.2s; }
-        .delay-3 { animation-delay: 0.3s; }
-        .delay-4 { animation-delay: 0.4s; }
-    </style>
+    <link rel="stylesheet" href="assets/css/style.css">
 </head>
-<body class="bg-light">
+<body>
     <?php include 'templates/navbar.php'; ?>
     
     <div class="container py-4">
-        <div class="welcome-section text-center mb-5">
-            <h1 class="mb-3">Bienvenido</h1>
-            <p class="mb-0">Tu panel de control para gestionar ventas, productos, usuarios y clientes de manera eficiente</p>
+        <div class="welcome-section text-center mb-4 py-3">
+            <div class="mb-2">
+                <i class="bi bi-speedometer2" style="font-size: 2rem;"></i>
+            </div>
+            <h2 class="mb-2 h3">Panel de Control</h2>
+            <p class="text-light mb-0 small">Sistema de gestión XelaExpress</p>
         </div>
-        
-        <div class="row mb-4">
+
+        <div class="row mb-4 g-4">
             <div class="col-md-3 mb-3 fade-in delay-1">
                 <div class="card stat-card h-100">
-                    <div class="card-body text-center">
-                        <div class="mb-3">
-                            <i class="fas fa-boxes text-primary" style="font-size: 2rem;"></i>
-                        </div>
-                        <h5 class="card-title text-muted">Productos</h5>
-                        <p class="display-6 fw-bold mb-0"><?php echo $total_productos; ?></p>
+                    <div class="card-header d-flex align-items-center justify-content-between">
+                        <span class="fw-bold text-primary">Productos Registrados</span>
+                        <i class="fas fa-boxes text-primary"></i>
+                    </div>
+                    <div class="card-body text-center py-3">
+                        <h3 class="h2 fw-bold text-primary mb-0"><?php echo $total_productos; ?></h3>
                     </div>
                 </div>
             </div>
             <div class="col-md-3 mb-3 fade-in delay-2">
                 <div class="card stat-card h-100">
-                    <div class="card-body text-center">
-                        <div class="mb-3">
-                            <i class="fas fa-shopping-cart text-success" style="font-size: 2rem;"></i>
-                        </div>
-                        <h5 class="card-title text-muted">Ventas</h5>
-                        <p class="display-6 fw-bold mb-0"><?php echo $total_ventas; ?></p>
+                    <div class="card-header d-flex align-items-center justify-content-between">
+                        <span class="fw-bold text-success">Ventas Realizadas</span>
+                        <i class="fas fa-shopping-cart text-success"></i>
+                    </div>
+                    <div class="card-body text-center py-3">
+                        <h3 class="h2 fw-bold text-success mb-0"><?php echo $total_ventas; ?></h3>
                     </div>
                 </div>
             </div>
             <div class="col-md-3 mb-3 fade-in delay-3">
                 <div class="card stat-card h-100">
-                    <div class="card-body text-center">
-                        <div class="mb-3">
-                            <i class="fas fa-chart-line text-warning" style="font-size: 2rem;"></i>
-                        </div>
-                        <h5 class="card-title text-muted">Ingresos</h5>
-                        <p class="display-6 fw-bold mb-0">Q <?php echo number_format($total_ingresos, 2); ?></p>
+                    <div class="card-header d-flex align-items-center justify-content-between">
+                        <span class="fw-bold text-warning">Ingresos Totales</span>
+                        <i class="fas fa-chart-line text-warning"></i>
+                    </div>
+                    <div class="card-body text-center py-3">
+                        <h3 class="h2 fw-bold text-warning mb-0">Q <?php echo number_format($total_ingresos, 2); ?></h3>
                     </div>
                 </div>
             </div>
             <div class="col-md-3 mb-3 fade-in delay-4">
                 <div class="card stat-card h-100">
-                    <div class="card-body text-center">
-                        <div class="mb-3">
-                            <i class="fas fa-users text-danger" style="font-size: 2rem;"></i>
-                        </div>
-                        <h5 class="card-title text-muted">Clientes</h5>
-                        <p class="display-6 fw-bold mb-0"><?php echo $total_clientes; ?></p>
+                    <div class="card-header d-flex align-items-center justify-content-between">
+                        <span class="fw-bold text-danger">Clientes Registrados</span>
+                        <i class="fas fa-users text-danger"></i>
+                    </div>
+                    <div class="card-body text-center py-3">
+                        <h3 class="h2 fw-bold text-danger mb-0"><?php echo $total_clientes; ?></h3>
                     </div>
                 </div>
             </div>
