@@ -146,6 +146,7 @@ if ($result) {
     <div class="card">
         <div class="card-header">Lista de productos</div>
         <div class="card-body p-0">
+            <div class="table-responsive">
             <table class="table table-striped mb-0">
                 <thead>
                     <tr>
@@ -175,6 +176,7 @@ if ($result) {
                 <?php endforeach; ?>
                 </tbody>
             </table>
+            </div>
         </div>
     </div>
 </div>

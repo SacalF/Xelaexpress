@@ -13,8 +13,13 @@ $logout_path = $base_path . 'logout.php';
             <img src="<?php echo $logo_path; ?>" alt="Logo XelaExpress" class="navbar-logo">
             <span class="brand-text">XelaExpress</span>
         </a>
-        
-        <div class="navbar-nav ms-auto">
+
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainNavbar" aria-controls="mainNavbar" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="mainNavbar">
+            <div class="navbar-nav ms-auto">
             <?php if (isset($_SESSION['usuario'])): ?>
                 <div class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle user-menu" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
@@ -35,6 +40,7 @@ $logout_path = $base_path . 'logout.php';
                     <i class="bi bi-box-arrow-in-right"></i> Iniciar Sesión
                 </a>
             <?php endif; ?>
+            </div>
         </div>
     </div>
 </nav> 
