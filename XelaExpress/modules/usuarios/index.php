@@ -98,19 +98,19 @@ if ($result) {
         <div class="card-body">
             <form method="post">
                 <div class="row g-2">
-                    <div class="col-md-3">
+                    <div class="col-12 col-md-3">
                         <input type="text" name="usuario" class="form-control" placeholder="Usuario" required>
                     </div>
-                    <div class="col-md-3">
+                    <div class="col-12 col-md-3">
                         <input type="password" name="password" class="form-control" placeholder="Contraseña" required>
                     </div>
-                    <div class="col-md-2">
+                    <div class="col-12 col-md-2">
                         <select name="rol" class="form-select" required>
                             <option value="usuario">Usuario</option>
                             <option value="admin">Administrador</option>
                         </select>
                     </div>
-                    <div class="col-md-1">
+                    <div class="col-12 col-md-1">
                         <button type="submit" name="registrar" class="btn btn-primary w-100">Registrar</button>
                     </div>
                 </div>
@@ -121,6 +121,7 @@ if ($result) {
     <div class="card">
         <div class="card-header">Lista de usuarios</div>
         <div class="card-body p-0">
+            <div class="table-responsive">
             <table class="table table-striped mb-0">
                 <thead>
                     <tr>
@@ -149,6 +150,7 @@ if ($result) {
                 <?php endforeach; ?>
                 </tbody>
             </table>
+            </div>
         </div>
     </div>
 </div>
