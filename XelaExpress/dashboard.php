@@ -66,7 +66,7 @@ if ($res) {
                 <div class="card stat-card h-100">
                     <div class="card-header d-flex align-items-center justify-content-between text-primary">
                         <span class="fw-bold">Productos Registrados</span>
-                        <i class="fas fa-boxes"></i>
+                        <i class="fas fa-boxes text-primary"></i>
                     </div>
                     <div class="card-body text-center py-3">
                         <h3 class="h2 fw-bold text-primary mb-0"><?php echo $total_productos; ?></h3>
@@ -77,7 +77,7 @@ if ($res) {
                 <div class="card stat-card h-100">
                     <div class="card-header d-flex align-items-center justify-content-between text-success">
                         <span class="fw-bold">Ventas Realizadas</span>
-                        <i class="fas fa-shopping-cart"></i>
+                        <i class="fas fa-shopping-cart text-success"></i>
                     </div>
                     <div class="card-body text-center py-3">
                         <h3 class="h2 fw-bold text-success mb-0"><?php echo $total_ventas; ?></h3>
@@ -88,7 +88,7 @@ if ($res) {
                 <div class="card stat-card h-100">
                     <div class="card-header d-flex align-items-center justify-content-between text-warning">
                         <span class="fw-bold">Ingresos Totales</span>
-                        <i class="fas fa-chart-line"></i>
+                        <i class="fas fa-chart-line text-warning"></i>
                     </div>
                     <div class="card-body text-center py-3">
                         <h3 class="h2 fw-bold text-warning mb-0">Q <?php echo number_format($total_ingresos, 2); ?></h3>
@@ -99,7 +99,7 @@ if ($res) {
                 <div class="card stat-card h-100">
                     <div class="card-header d-flex align-items-center justify-content-between text-danger">
                         <span class="fw-bold">Clientes Registrados</span>
-                        <i class="fas fa-users"></i>
+                        <i class="fas fa-users text-danger"></i>
                     </div>
                     <div class="card-body text-center py-3">
                         <h3 class="h2 fw-bold text-danger mb-0"><?php echo $total_clientes; ?></h3>
@@ -292,18 +292,7 @@ if ($res) {
     });
     </script>
     
-    <script>
-    // Forzar color de iconos a partir del color calculado del card-header
-    document.addEventListener('DOMContentLoaded', function() {
-        document.querySelectorAll('.card-header').forEach(function(header) {
-            var color = window.getComputedStyle(header).color;
-            // aplicar al icono <i class="fas"> dentro del header
-            var icon = header.querySelector('.fas');
-            if (icon) icon.style.color = color;
-        });
-    });
-    </script>
-
+    
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

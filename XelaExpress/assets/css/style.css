@@ -46,25 +46,26 @@ body.bg-light {
     background-color: #f0f4f8 !important;
 }
 
-/* Estilos para los iconos del dashboard: heredan color desde el card-header */
-.card-header.text-primary .fas {
-    color: var(--primary) !important;
+/* Estilos para los iconos del dashboard: usar las clases de Bootstrap */
+.card-header .fas {
     font-size: 2rem;
 }
 
-.card-header.text-success .fas {
-    color: var(--success) !important;
-    font-size: 2rem;
+/* Asegurar que los iconos mantengan su color asignado */
+.card-header .text-primary {
+    color: var(--bs-primary) !important;
 }
 
-.card-header.text-warning .fas {
-    color: var(--warning) !important;
-    font-size: 2rem;
+.card-header .text-success {
+    color: var(--bs-success) !important;
 }
 
-.card-header.text-danger .fas {
-    color: var(--danger) !important;
-    font-size: 2rem;
+.card-header .text-warning {
+    color: var(--bs-warning) !important;
+}
+
+.card-header .text-danger {
+    color: var(--bs-danger) !important;
 }
 
 /* Estilo para las tarjetas estadísticas */
