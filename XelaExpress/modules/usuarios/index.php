@@ -83,8 +83,13 @@ if ($result) {
     <?php include '../../templates/navbar.php'; ?>
     
     <div class="container py-4">
-        <h2 class="mb-4 display-3">Gestión de Usuarios <i class="bi bi-person-badge text-info"></i></h2>
-        <a href="../../dashboard.php" class="btn btn-secondary mb-3"><i class="bi bi-arrow-left"></i> Volver al dashboard</a>
+        <div class="d-flex flex-column mb-4">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <h2 class="h3 mb-0">Gestión de Usuarios</h2>
+                <a href="../../dashboard.php" class="btn btn-secondary btn-sm">
+                    <i class="bi bi-arrow-left"></i><span class="d-none d-md-inline"> Volver</span>
+                </a>
+            </div>
 
     <?php if ($mensaje): ?>
         <div class="alert alert-success"> <?= $mensaje ?> </div>
@@ -122,28 +127,30 @@ if ($result) {
         <div class="card-header">Lista de usuarios</div>
         <div class="card-body p-0">
             <div class="table-responsive">
-            <table class="table table-striped mb-0">
+            <table class="table table-striped table-hover align-middle mb-0">
                 <thead>
                     <tr>
-                        <th>ID</th>
+                        <th class="d-none d-md-table-cell">ID</th>
                         <th>Usuario</th>
                         <th>Rol</th>
-                        <th>Creado en</th>
-                        <th>Acciones</th>
+                        <th class="d-none d-lg-table-cell">Creado en</th>
+                        <th class="text-end">Acciones</th>
                     </tr>
                 </thead>
                 <tbody>
                 <?php foreach ($usuarios as $u): ?>
                     <tr>
-                        <td><?= htmlspecialchars($u['id']) ?></td>
+                        <td class="d-none d-md-table-cell"><?= htmlspecialchars($u['id']) ?></td>
                         <td><?= htmlspecialchars($u['usuario']) ?></td>
-                        <td><?= htmlspecialchars($u['rol']) ?></td>
-                        <td><?= htmlspecialchars($u['creado_en']) ?></td>
-                        <td>
+                        <td><span class="badge bg-<?= $u['rol'] === 'admin' ? 'primary' : 'secondary' ?>"><?= htmlspecialchars($u['rol']) ?></span></td>
+                        <td class="d-none d-lg-table-cell"><?= htmlspecialchars($u['creado_en']) ?></td>
+                        <td class="text-end">
                             <?php if ($u['id'] != $_SESSION['usuario_id']): ?>
-                                <a href="?eliminar=<?= $u['id'] ?>" class="btn btn-sm btn-danger" onclick="return confirm('¿Eliminar este usuario?')">Eliminar</a>
+                                <div class="btn-group btn-group-sm">
+                                    <a href="?eliminar=<?= $u['id'] ?>" class="btn btn-danger" onclick="return confirm('¿Eliminar este usuario?')"><i class="bi bi-trash"></i></a>
+                                </div>
                             <?php else: ?>
-                                <span class="text-muted">(Tú)</span>
+                                <span class="badge bg-info">Usuario actual</span>
                             <?php endif; ?>
                         </td>
                     </tr>

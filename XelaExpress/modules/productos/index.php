@@ -100,42 +100,71 @@ if ($result) {
     <?php include '../../templates/navbar.php'; ?>
     
     <div class="container py-4">
-        <h2 class="mb-4 display-3">Gestión de Productos <i class="bi bi-box-seam text-primary"></i></h2>
-        <a href="../../dashboard.php" class="btn btn-secondary mb-3"><i class="bi bi-arrow-left"></i> Volver al dashboard</a>
+        <div class="d-flex flex-column mb-4">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <h2 class="h3 mb-0">Gestión de Productos</h2>
+                <a href="../../dashboard.php" class="btn btn-secondary btn-sm">
+                    <i class="bi bi-arrow-left"></i><span class="d-none d-md-inline"> Volver</span>
+                </a>
+            </div>
 
-    <?php if ($mensaje): ?>
-        <div class="alert alert-success"> <?= $mensaje ?> </div>
-    <?php endif; ?>
-    <?php if ($error): ?>
-        <div class="alert alert-danger"> <?= $error ?> </div>
-    <?php endif; ?>
+            <?php if ($mensaje): ?>
+                <div class="alert alert-success py-2"> <?= $mensaje ?> </div>
+            <?php endif; ?>
+            <?php if ($error): ?>
+                <div class="alert alert-danger py-2"> <?= $error ?> </div>
+            <?php endif; ?>
+        </div>
 
-    <div class="card mb-4">
-        <div class="card-header"><?php echo $producto_editar ? 'Editar producto' : 'Registrar nuevo producto'; ?></div>
-        <div class="card-body">
-            <form method="post">
-                <div class="row g-2">
+        <div class="card mb-4">
+            <div class="card-header">
+                <i class="bi bi-plus-circle me-2"></i>
+                <?php echo $producto_editar ? 'Editar producto' : 'Nuevo producto'; ?>
+            </div>
+            <div class="card-body">
+                <form method="post" class="needs-validation" novalidate>
                     <?php if ($producto_editar): ?>
                         <input type="hidden" name="id" value="<?= htmlspecialchars($producto_editar['id']) ?>">
                     <?php endif; ?>
-                    <div class="col-md-3">
-                        <input type="text" name="nombre" class="form-control" placeholder="Nombre" required value="<?= $producto_editar ? htmlspecialchars($producto_editar['nombre']) : '' ?>">
+                    <div class="mb-3">
+                        <label class="form-label">Nombre del producto</label>
+                        <input type="text" name="nombre" class="form-control" required 
+                               value="<?= $producto_editar ? htmlspecialchars($producto_editar['nombre']) : '' ?>">
                     </div>
-                    <div class="col-md-3">
-                        <input type="text" name="descripcion" class="form-control" placeholder="Descripción" value="<?= $producto_editar ? htmlspecialchars($producto_editar['descripcion']) : '' ?>">
+                    
+                    <div class="mb-3">
+                        <label class="form-label">Descripción</label>
+                        <input type="text" name="descripcion" class="form-control"
+                               value="<?= $producto_editar ? htmlspecialchars($producto_editar['descripcion']) : '' ?>">
                     </div>
-                    <div class="col-md-2">
-                        <input type="number" name="precio" class="form-control" placeholder="Precio" min="0.01" step="0.01" required value="<?= $producto_editar ? htmlspecialchars($producto_editar['precio']) : '' ?>">
+                    
+                    <div class="row g-2">
+                        <div class="col-6">
+                            <label class="form-label">Precio (Q)</label>
+                            <input type="number" name="precio" class="form-control" min="0.01" step="0.01" required 
+                                   value="<?= $producto_editar ? htmlspecialchars($producto_editar['precio']) : '' ?>">
+                        </div>
+                        <div class="col-6">
+                            <label class="form-label">Stock</label>
+                            <input type="number" name="stock" class="form-control" min="0" required 
+                                   value="<?= $producto_editar ? htmlspecialchars($producto_editar['stock']) : '' ?>">
+                        </div>
                     </div>
-                    <div class="col-md-2">
-                        <input type="number" name="stock" class="form-control" placeholder="Stock" min="0" required value="<?= $producto_editar ? htmlspecialchars($producto_editar['stock']) : '' ?>">
-                    </div>
-                    <div class="col-md-2">
+
+                    <div class="mt-4">
                         <?php if ($producto_editar): ?>
-                            <button type="submit" name="actualizar" class="btn btn-success w-100">Actualizar</button>
-                            <a href="index.php" class="btn btn-secondary w-100 mt-2">Cancelar</a>
+                            <div class="d-flex gap-2">
+                                <button type="submit" name="actualizar" class="btn btn-success flex-grow-1">
+                                    <i class="bi bi-check-lg"></i> Actualizar
+                                </button>
+                                <a href="index.php" class="btn btn-secondary">
+                                    <i class="bi bi-x-lg"></i> Cancelar
+                                </a>
+                            </div>
                         <?php else: ?>
-                            <button type="submit" name="registrar" class="btn btn-primary w-100">Registrar</button>
+                            <button type="submit" name="registrar" class="btn btn-primary w-100">
+                                <i class="bi bi-plus-lg"></i> Registrar producto
+                            </button>
                         <?php endif; ?>
                     </div>
                 </div>
@@ -144,36 +173,51 @@ if ($result) {
     </div>
 
     <div class="card">
-        <div class="card-header">Lista de productos</div>
+        <div class="card-header d-flex justify-content-between align-items-center">
+            <span><i class="bi bi-list-ul me-2"></i>Lista de productos</span>
+            <span class="badge bg-primary"><?= count($productos) ?> productos</span>
+        </div>
         <div class="card-body p-0">
             <div class="table-responsive">
-            <table class="table table-striped mb-0">
-                <thead>
-                    <tr>
-                        <th>ID</th>
-                        <th>Nombre</th>
-                        <th>Descripción</th>
-                        <th>Precio</th>
-                        <th>Stock</th>
-                        <th>Creado en</th>
-                        <th>Acciones</th>
-                    </tr>
-                </thead>
-                <tbody>
-                <?php foreach ($productos as $p): ?>
-                    <tr>
-                        <td><?= htmlspecialchars($p['id']) ?></td>
-                        <td><?= htmlspecialchars($p['nombre']) ?></td>
-                        <td><?= htmlspecialchars($p['descripcion']) ?></td>
-                        <td>Q <?= number_format($p['precio'], 2) ?></td>
-                        <td><?= htmlspecialchars($p['stock']) ?></td>
-                        <td><?= htmlspecialchars($p['creado_en']) ?></td>
-                        <td>
-                            <a href="?eliminar=<?= $p['id'] ?>" class="btn btn-sm btn-danger" onclick="return confirm('¿Eliminar este producto?')">Eliminar</a>
-                            <a href="?editar=<?= $p['id'] ?>" class="btn btn-sm btn-warning ms-1">Editar</a>
-                        </td>
-                    </tr>
-                <?php endforeach; ?>
+                <table class="table table-hover align-middle mb-0">
+                    <thead class="table-light">
+                        <tr>
+                            <th>Producto</th>
+                            <th class="text-end">Precio</th>
+                            <th class="text-center">Stock</th>
+                            <th class="text-end">Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    <?php foreach ($productos as $p): ?>
+                        <tr>
+                            <td>
+                                <div class="fw-bold"><?= htmlspecialchars($p['nombre']) ?></div>
+                                <?php if (!empty($p['descripcion'])): ?>
+                                    <small class="text-muted d-block"><?= htmlspecialchars($p['descripcion']) ?></small>
+                                <?php endif; ?>
+                            </td>
+                            <td class="text-end">
+                                <div class="fw-bold">Q <?= number_format($p['precio'], 2) ?></div>
+                            </td>
+                            <td class="text-center">
+                                <span class="badge bg-<?= $p['stock'] > 0 ? 'success' : 'danger' ?>">
+                                    <?= htmlspecialchars($p['stock']) ?>
+                                </span>
+                            </td>
+                            <td class="text-end">
+                                <div class="btn-group btn-group-sm">
+                                    <a href="?editar=<?= $p['id'] ?>" class="btn btn-warning">
+                                        <i class="bi bi-pencil"></i>
+                                    </a>
+                                    <a href="?eliminar=<?= $p['id'] ?>" class="btn btn-danger" 
+                                       onclick="return confirm('¿Eliminar <?= htmlspecialchars($p['nombre']) ?>?')">
+                                        <i class="bi bi-trash"></i>
+                                    </a>
+                                </div>
+                            </td>
+                        </tr>
+                    <?php endforeach; ?>
                 </tbody>
             </table>
             </div>
