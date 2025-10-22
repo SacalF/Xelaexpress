@@ -78,19 +78,25 @@ if ($result) {
     <title>Usuarios - XelaExpress</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="../../assets/css/style.css">
+    <link rel="stylesheet" href="../../assets/css/sidebar.css">
     <link rel="stylesheet" href="../../assets/css/table-styles.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
 </head>
 <body>
-    <?php include '../../templates/navbar.php'; ?>
+    <?php include '../../templates/sidebar.php'; ?>
     
-    <div class="container py-4">
+    <div class="container-fluid">
         <div class="d-flex flex-column mb-4">
             <div class="d-flex justify-content-between align-items-center mb-3 flex-wrap">
                 <h2 class="h3 mb-0">Gestión de Usuarios</h2>
-                <a href="../../dashboard.php" class="btn btn-secondary btn-sm">
-                    <i class="bi bi-arrow-left"></i><span class="d-none d-md-inline"> Volver</span>
-                </a>
+                <div class="d-flex gap-2">
+                    <button class="btn btn-outline-primary btn-sm" onclick="exportarUsuarios()">
+                        <i class="bi bi-download me-1"></i>Exportar
+                    </button>
+                    <button class="btn btn-primary btn-sm" onclick="mostrarFormulario()">
+                        <i class="bi bi-plus-lg me-1"></i>Nuevo Usuario
+                    </button>
+                </div>
             </div>
 
             <?php if ($mensaje): ?>
@@ -116,34 +122,67 @@ if ($result) {
                 <form method="post" class="needs-validation" novalidate>
                     <div class="row g-3">
                         <div class="col-12 col-md-4">
-                            <label class="form-label">Usuario <span class="text-danger">*</span></label>
-                            <input type="text" name="usuario" class="form-control" placeholder="Nombre de usuario" required>
-                            <div class="invalid-feedback">
-                                Por favor ingrese un nombre de usuario.
+                            <label class="form-label">
+                                <i class="bi bi-person me-1"></i>Usuario <span class="text-danger">*</span>
+                            </label>
+                            <input type="text" 
+                                   name="usuario" 
+                                   class="form-control" 
+                                   placeholder="Ej: admin123" 
+                                   required
+                                   minlength="3"
+                                   maxlength="50"
+                                   pattern="[a-zA-Z0-9_]+"
+                                   title="Solo letras, números y guiones bajos">
+                            <div class="form-text text-muted">
+                                <small>Solo letras, números y guiones bajos</small>
                             </div>
                         </div>
+                        
                         <div class="col-12 col-md-4">
-                            <label class="form-label">Contraseña <span class="text-danger">*</span></label>
-                            <input type="password" name="password" class="form-control" placeholder="Contraseña" required minlength="6">
-                            <div class="invalid-feedback">
-                                La contraseña debe tener al menos 6 caracteres.
+                            <label class="form-label">
+                                <i class="bi bi-lock me-1"></i>Contraseña <span class="text-danger">*</span>
+                            </label>
+                            <div class="position-relative">
+                                <input type="password" 
+                                       name="password" 
+                                       class="form-control" 
+                                       placeholder="Ej: miPassword123" 
+                                       required 
+                                       minlength="6"
+                                       maxlength="100"
+                                       id="password">
+                                <i class="bi bi-eye-slash position-absolute top-50 end-0 translate-middle-y me-3 password-toggle" 
+                                   onclick="togglePassword('password')" 
+                                   style="cursor: pointer; z-index: 10;"></i>
+                            </div>
+                            <div class="form-text text-muted">
+                                <small>Mínimo 6 caracteres</small>
                             </div>
                         </div>
+                        
                         <div class="col-12 col-md-4">
-                            <label class="form-label">Rol <span class="text-danger">*</span></label>
+                            <label class="form-label">
+                                <i class="bi bi-shield me-1"></i>Rol <span class="text-danger">*</span>
+                            </label>
                             <select name="rol" class="form-select" required>
                                 <option value="">Seleccionar rol</option>
-                                <option value="usuario">Usuario</option>
-                                <option value="admin">Administrador</option>
+                                <option value="usuario">
+                                    <i class="bi bi-person"></i> Usuario
+                                </option>
+                                <option value="admin">
+                                    <i class="bi bi-shield-check"></i> Administrador
+                                </option>
                             </select>
-                            <div class="invalid-feedback">
-                                Por favor seleccione un rol.
+                            <div class="form-text text-muted">
+                                <small>Seleccione el nivel de acceso</small>
                             </div>
                         </div>
                     </div>
-                    <div class="mt-3">
+                    
+                    <div class="mt-4">
                         <button type="submit" name="registrar" class="btn btn-primary">
-                            <i class="bi bi-person-plus"></i> Registrar usuario
+                            <i class="bi bi-person-plus me-2"></i>Registrar usuario
                         </button>
                     </div>
                 </form>
@@ -224,6 +263,22 @@ if ($result) {
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 <script>
+    // Función para mostrar/ocultar contraseña
+    function togglePassword(inputId) {
+        const passwordInput = document.getElementById(inputId);
+        const passwordToggle = passwordInput.nextElementSibling;
+        
+        if (passwordInput.type === 'password') {
+            passwordInput.type = 'text';
+            passwordToggle.classList.remove('bi-eye-slash');
+            passwordToggle.classList.add('bi-eye');
+        } else {
+            passwordInput.type = 'password';
+            passwordToggle.classList.remove('bi-eye');
+            passwordToggle.classList.add('bi-eye-slash');
+        }
+    }
+
     // Función para confirmar eliminación
     function confirmarEliminacion(id, usuario) {
         if (confirm(`¿Está seguro de que desea eliminar el usuario "${usuario}"?\n\nEsta acción no se puede deshacer.`)) {
@@ -256,6 +311,63 @@ if ($result) {
             bsAlert.close();
         });
     }, 5000);
+
+    // Inicializar sidebar
+    document.addEventListener('DOMContentLoaded', function() {
+        if (window.sidebarManager) {
+            window.sidebarManager.updatePageTitle();
+        }
+    });
+
+    // Función para mostrar formulario
+    function mostrarFormulario() {
+        const formulario = document.querySelector('.card');
+        if (formulario) {
+            formulario.scrollIntoView({ behavior: 'smooth' });
+            const primerInput = formulario.querySelector('input[name="usuario"]');
+            if (primerInput) {
+                primerInput.focus();
+            }
+        }
+    }
+
+    // Función para exportar usuarios
+    function exportarUsuarios() {
+        const tabla = document.querySelector('.table');
+        if (tabla) {
+            const csv = tablaToCSV(tabla);
+            downloadCSV(csv, 'usuarios.csv');
+        }
+    }
+
+    function tablaToCSV(tabla) {
+        let csv = [];
+        const filas = tabla.querySelectorAll('tr');
+        
+        filas.forEach(fila => {
+            const celdas = fila.querySelectorAll('td, th');
+            const filaCSV = Array.from(celdas).map(celda => {
+                return '"' + celda.textContent.replace(/"/g, '""') + '"';
+            }).join(',');
+            csv.push(filaCSV);
+        });
+        
+        return csv.join('\n');
+    }
+
+    function downloadCSV(csv, filename) {
+        const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+        const link = document.createElement('a');
+        const url = URL.createObjectURL(blob);
+        link.setAttribute('href', url);
+        link.setAttribute('download', filename);
+        link.style.visibility = 'hidden';
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+    }
 </script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script src="../../assets/js/sidebar.js"></script>
 </body>
 </html> 

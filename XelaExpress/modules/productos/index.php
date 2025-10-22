@@ -98,19 +98,25 @@ if ($result) {
     <title>Productos - XelaExpress</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="../../assets/css/style.css">
+    <link rel="stylesheet" href="../../assets/css/sidebar.css">
     <link rel="stylesheet" href="../../assets/css/table-styles.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
 </head>
 <body>
-    <?php include '../../templates/navbar.php'; ?>
+    <?php include '../../templates/sidebar.php'; ?>
     
-    <div class="container py-4">
+    <div class="container-fluid">
         <div class="d-flex flex-column mb-4">
             <div class="d-flex justify-content-between align-items-center mb-3 flex-wrap">
                 <h2 class="h3 mb-0">Gestión de Productos</h2>
-                <a href="../../dashboard.php" class="btn btn-secondary btn-sm">
-                    <i class="bi bi-arrow-left"></i><span class="d-none d-md-inline"> Volver</span>
-                </a>
+                <div class="d-flex gap-2">
+                    <button class="btn btn-outline-primary btn-sm" onclick="exportarProductos()">
+                        <i class="bi bi-download me-1"></i>Exportar
+                    </button>
+                    <button class="btn btn-primary btn-sm" onclick="mostrarFormulario()">
+                        <i class="bi bi-plus-lg me-1"></i>Nuevo Producto
+                    </button>
+                </div>
             </div>
 
             <?php if ($mensaje): ?>
@@ -144,9 +150,9 @@ if ($result) {
                             <label class="form-label">Nombre del producto <span class="text-danger">*</span></label>
                             <input type="text" name="nombre" class="form-control" required 
                                    value="<?= $producto_editar ? htmlspecialchars($producto_editar['nombre']) : '' ?>"
-                                   placeholder="Ingrese el nombre del producto">
-                            <div class="invalid-feedback">
-                                Por favor ingrese el nombre del producto.
+                                   placeholder="Ej: Laptop HP Pavilion">
+                            <div class="form-text text-muted">
+                                <small>Ingrese el nombre completo del producto</small>
                             </div>
                         </div>
                         
@@ -154,7 +160,10 @@ if ($result) {
                             <label class="form-label">Descripción</label>
                             <input type="text" name="descripcion" class="form-control"
                                    value="<?= $producto_editar ? htmlspecialchars($producto_editar['descripcion']) : '' ?>"
-                                   placeholder="Descripción del producto (opcional)">
+                                   placeholder="Ej: Laptop de 15 pulgadas, 8GB RAM">
+                            <div class="form-text text-muted">
+                                <small>Descripción detallada del producto (opcional)</small>
+                            </div>
                         </div>
                     </div>
                     
@@ -163,22 +172,26 @@ if ($result) {
                             <label class="form-label">Precio (Q) <span class="text-danger">*</span></label>
                             <div class="input-group">
                                 <span class="input-group-text">Q</span>
-                                <input type="number" name="precio" class="form-control" min="0.01" step="0.01" required 
+                                <input type="text" name="precio" class="form-control" required 
                                        value="<?= $producto_editar ? htmlspecialchars($producto_editar['precio']) : '' ?>"
-                                       placeholder="0.00">
-                                <div class="invalid-feedback">
-                                    Por favor ingrese un precio válido.
-                                </div>
+                                       placeholder="Ej: 2500.00"
+                                       pattern="^\d+(\.\d{1,2})?$"
+                                       title="Solo números con máximo 2 decimales">
+                            </div>
+                            <div class="form-text text-muted">
+                                <small>Precio en quetzales (mínimo Q0.01)</small>
                             </div>
                         </div>
                         
                         <div class="col-12 col-md-6">
                             <label class="form-label">Stock <span class="text-danger">*</span></label>
-                            <input type="number" name="stock" class="form-control" min="0" required 
+                            <input type="text" name="stock" class="form-control" required 
                                    value="<?= $producto_editar ? htmlspecialchars($producto_editar['stock']) : '' ?>"
-                                   placeholder="Cantidad en stock">
-                            <div class="invalid-feedback">
-                                Por favor ingrese la cantidad en stock.
+                                   placeholder="Ej: 50"
+                                   pattern="^\d+$"
+                                   title="Solo números enteros">
+                            <div class="form-text text-muted">
+                                <small>Cantidad disponible en inventario</small>
                             </div>
                         </div>
                     </div>
@@ -280,12 +293,100 @@ if ($result) {
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="../../assets/js/sidebar.js"></script>
     <script>
+    // Prevenir entrada de caracteres no numéricos
+    document.addEventListener('input', function(e) {
+        if (e.target.name === 'precio') {
+            // Solo permitir números y un punto decimal
+            e.target.value = e.target.value.replace(/[^0-9.]/g, '');
+            // Evitar múltiples puntos decimales
+            const parts = e.target.value.split('.');
+            if (parts.length > 2) {
+                e.target.value = parts[0] + '.' + parts.slice(1).join('');
+            }
+            // Limitar a 2 decimales
+            if (parts[1] && parts[1].length > 2) {
+                e.target.value = parts[0] + '.' + parts[1].substring(0, 2);
+            }
+        }
+        
+        if (e.target.name === 'stock') {
+            // Solo permitir números enteros
+            e.target.value = e.target.value.replace(/[^0-9]/g, '');
+        }
+    });
+
+    // Prevenir entrada de 'e', '+', '-' en campos numéricos
+    document.addEventListener('keydown', function(e) {
+        if (e.target.name === 'precio' || e.target.name === 'stock') {
+            if (e.key === 'e' || e.key === 'E' || e.key === '+' || e.key === '-') {
+                e.preventDefault();
+            }
+        }
+    });
+
+    // Inicializar sidebar
+    document.addEventListener('DOMContentLoaded', function() {
+        if (window.sidebarManager) {
+            window.sidebarManager.updatePageTitle();
+        }
+    });
+
         // Función para confirmar eliminación
         function confirmarEliminacion(id, nombre) {
             if (confirm(`¿Está seguro de que desea eliminar el producto "${nombre}"?\n\nEsta acción no se puede deshacer.`)) {
                 window.location.href = `?eliminar=${id}`;
             }
+        }
+
+        // Función para mostrar formulario
+        function mostrarFormulario() {
+            const formulario = document.querySelector('.card');
+            if (formulario) {
+                formulario.scrollIntoView({ behavior: 'smooth' });
+                const primerInput = formulario.querySelector('input[name="nombre"]');
+                if (primerInput) {
+                    primerInput.focus();
+                }
+            }
+        }
+
+        // Función para exportar productos
+        function exportarProductos() {
+            // Crear tabla temporal para exportar
+            const tabla = document.querySelector('.table');
+            if (tabla) {
+                const csv = tablaToCSV(tabla);
+                downloadCSV(csv, 'productos.csv');
+            }
+        }
+
+        function tablaToCSV(tabla) {
+            let csv = [];
+            const filas = tabla.querySelectorAll('tr');
+            
+            filas.forEach(fila => {
+                const celdas = fila.querySelectorAll('td, th');
+                const filaCSV = Array.from(celdas).map(celda => {
+                    return '"' + celda.textContent.replace(/"/g, '""') + '"';
+                }).join(',');
+                csv.push(filaCSV);
+            });
+            
+            return csv.join('\n');
+        }
+
+        function downloadCSV(csv, filename) {
+            const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+            const link = document.createElement('a');
+            const url = URL.createObjectURL(blob);
+            link.setAttribute('href', url);
+            link.setAttribute('download', filename);
+            link.style.visibility = 'hidden';
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
         }
 
         // Validación de formularios Bootstrap

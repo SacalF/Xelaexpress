@@ -1,0 +1,368 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Paleta de Colores - XelaExpress</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="assets/css/style.css">
+    <style>
+        .color-demo {
+            padding: 2rem;
+            background: var(--light);
+            min-height: 100vh;
+        }
+        
+        .color-card {
+            background: white;
+            border-radius: var(--border-radius);
+            padding: 1.5rem;
+            margin-bottom: 1rem;
+            box-shadow: var(--shadow-md);
+            transition: var(--transition);
+        }
+        
+        .color-card:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-lg);
+        }
+        
+        .color-swatch {
+            width: 100%;
+            height: 60px;
+            border-radius: var(--border-radius-sm);
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 600;
+            text-shadow: 0 1px 2px rgba(0,0,0,0.3);
+        }
+        
+        .color-info {
+            font-size: 0.9rem;
+            color: var(--dark);
+        }
+        
+        .demo-section {
+            margin-bottom: 3rem;
+        }
+        
+        .demo-title {
+            color: var(--dark);
+            font-weight: 700;
+            margin-bottom: 1.5rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 2px solid var(--primary);
+        }
+    </style>
+</head>
+<body>
+    <div class="color-demo">
+        <div class="container">
+            <div class="text-center mb-5">
+                <h1 class="display-4 text-gradient mb-3">Paleta de Colores XelaExpress</h1>
+                <p class="lead text-muted">Nueva paleta profesional para punto de venta</p>
+            </div>
+
+            <!-- Colores Principales -->
+            <div class="demo-section">
+                <h2 class="demo-title">Colores Principales</h2>
+                <div class="row g-4">
+                    <div class="col-md-3">
+                        <div class="color-card">
+                            <div class="color-swatch" style="background: var(--primary);">
+                                Primary
+                            </div>
+                            <div class="color-info">
+                                <strong>Primary:</strong> #2563eb<br>
+                                <small>Azul profesional para elementos principales</small>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="color-card">
+                            <div class="color-swatch" style="background: var(--secondary);">
+                                Secondary
+                            </div>
+                            <div class="color-info">
+                                <strong>Secondary:</strong> #059669<br>
+                                <small>Verde empresarial para elementos secundarios</small>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="color-card">
+                            <div class="color-swatch" style="background: var(--success);">
+                                Success
+                            </div>
+                            <div class="color-info">
+                                <strong>Success:</strong> #10b981<br>
+                                <small>Verde para acciones exitosas</small>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="color-card">
+                            <div class="color-swatch" style="background: var(--warning);">
+                                Warning
+                            </div>
+                            <div class="color-info">
+                                <strong>Warning:</strong> #f59e0b<br>
+                                <small>Amarillo dorado para advertencias</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Colores de Estado -->
+            <div class="demo-section">
+                <h2 class="demo-title">Colores de Estado</h2>
+                <div class="row g-4">
+                    <div class="col-md-4">
+                        <div class="color-card">
+                            <div class="color-swatch" style="background: var(--danger);">
+                                Danger
+                            </div>
+                            <div class="color-info">
+                                <strong>Danger:</strong> #ef4444<br>
+                                <small>Rojo suave para errores y eliminaciones</small>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="color-card">
+                            <div class="color-swatch" style="background: var(--info);">
+                                Info
+                            </div>
+                            <div class="color-info">
+                                <strong>Info:</strong> #06b6d4<br>
+                                <small>Cian suave para información</small>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="color-card">
+                            <div class="color-swatch" style="background: var(--dark);">
+                                Dark
+                            </div>
+                            <div class="color-info">
+                                <strong>Dark:</strong> #374151<br>
+                                <small>Gris oscuro profesional para texto</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Botones de Demostración -->
+            <div class="demo-section">
+                <h2 class="demo-title">Botones con Nueva Paleta</h2>
+                <div class="row g-3">
+                    <div class="col-md-3">
+                        <button class="btn btn-primary w-100">
+                            <i class="bi bi-check-lg me-2"></i>Primary
+                        </button>
+                    </div>
+                    <div class="col-md-3">
+                        <button class="btn btn-success w-100">
+                            <i class="bi bi-plus-lg me-2"></i>Success
+                        </button>
+                    </div>
+                    <div class="col-md-3">
+                        <button class="btn btn-warning w-100">
+                            <i class="bi bi-exclamation-triangle me-2"></i>Warning
+                        </button>
+                    </div>
+                    <div class="col-md-3">
+                        <button class="btn btn-danger w-100">
+                            <i class="bi bi-trash me-2"></i>Danger
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Alertas de Demostración -->
+            <div class="demo-section">
+                <h2 class="demo-title">Alertas con Nueva Paleta</h2>
+                <div class="row g-3">
+                    <div class="col-md-6">
+                        <div class="alert alert-success">
+                            <i class="bi bi-check-circle-fill me-2"></i>
+                            Operación completada exitosamente
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="alert alert-danger">
+                            <i class="bi bi-exclamation-triangle-fill me-2"></i>
+                            Error al procesar la solicitud
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="alert alert-warning">
+                            <i class="bi bi-info-circle-fill me-2"></i>
+                            Advertencia: Stock bajo
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="alert alert-info">
+                            <i class="bi bi-lightbulb me-2"></i>
+                            Información importante del sistema
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tarjetas de Demostración -->
+            <div class="demo-section">
+                <h2 class="demo-title">Tarjetas de Estadísticas</h2>
+                <div class="row g-4">
+                    <div class="col-md-3">
+                        <div class="card stat-card">
+                            <div class="card-header d-flex align-items-center justify-content-between text-primary">
+                                <span class="fw-bold">Productos</span>
+                                <i class="bi bi-box-seam text-primary"></i>
+                            </div>
+                            <div class="card-body text-center py-4">
+                                <h3 class="h1 fw-bold text-primary mb-0">156</h3>
+                                <p class="text-muted mb-0 mt-2">En inventario</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="card stat-card">
+                            <div class="card-header d-flex align-items-center justify-content-between text-success">
+                                <span class="fw-bold">Ventas</span>
+                                <i class="bi bi-cart-check text-success"></i>
+                            </div>
+                            <div class="card-body text-center py-4">
+                                <h3 class="h1 fw-bold text-success mb-0">89</h3>
+                                <p class="text-muted mb-0 mt-2">Hoy</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="card stat-card">
+                            <div class="card-header d-flex align-items-center justify-content-between text-warning">
+                                <span class="fw-bold">Ingresos</span>
+                                <i class="bi bi-currency-dollar text-warning"></i>
+                            </div>
+                            <div class="card-body text-center py-4">
+                                <h3 class="h1 fw-bold text-warning mb-0">Q 2,450</h3>
+                                <p class="text-muted mb-0 mt-2">Hoy</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="card stat-card">
+                            <div class="card-header d-flex align-items-center justify-content-between text-danger">
+                                <span class="fw-bold">Clientes</span>
+                                <i class="bi bi-people text-danger"></i>
+                            </div>
+                            <div class="card-body text-center py-4">
+                                <h3 class="h1 fw-bold text-danger mb-0">234</h3>
+                                <p class="text-muted mb-0 mt-2">Registrados</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Formulario de Demostración -->
+            <div class="demo-section">
+                <h2 class="demo-title">Formulario con Nueva Paleta</h2>
+                <div class="row justify-content-center">
+                    <div class="col-md-8">
+                        <div class="card">
+                            <div class="card-header">
+                                <h5 class="mb-0">
+                                    <i class="bi bi-person-plus me-2"></i>Formulario de Demostración
+                                </h5>
+                            </div>
+                            <div class="card-body">
+                                <form class="needs-validation" novalidate>
+                                    <div class="row g-3">
+                                        <div class="col-md-6">
+                                            <label class="form-label">Nombre <span class="text-danger">*</span></label>
+                                            <input type="text" class="form-control" placeholder="Ingrese su nombre" required>
+                                            <div class="invalid-feedback">
+                                                Por favor ingrese su nombre
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <label class="form-label">Email <span class="text-danger">*</span></label>
+                                            <input type="email" class="form-control" placeholder="correo@ejemplo.com" required>
+                                            <div class="invalid-feedback">
+                                                Por favor ingrese un email válido
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <label class="form-label">Teléfono</label>
+                                            <input type="tel" class="form-control" placeholder="1234-5678">
+                                        </div>
+                                        <div class="col-md-6">
+                                            <label class="form-label">Rol</label>
+                                            <select class="form-select">
+                                                <option>Seleccionar rol</option>
+                                                <option>Administrador</option>
+                                                <option>Usuario</option>
+                                            </select>
+                                        </div>
+                                        <div class="col-12">
+                                            <button type="submit" class="btn btn-primary">
+                                                <i class="bi bi-check-lg me-2"></i>Guardar
+                                            </button>
+                                            <button type="button" class="btn btn-secondary ms-2">
+                                                <i class="bi bi-x-lg me-2"></i>Cancelar
+                                            </button>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Resumen -->
+            <div class="demo-section">
+                <div class="card">
+                    <div class="card-header bg-primary text-white">
+                        <h5 class="mb-0">
+                            <i class="bi bi-palette me-2"></i>Características de la Nueva Paleta
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="row g-4">
+                            <div class="col-md-6">
+                                <h6 class="text-primary">✅ Ventajas</h6>
+                                <ul class="list-unstyled">
+                                    <li><i class="bi bi-check-circle text-success me-2"></i>Tonos profesionales y confiables</li>
+                                    <li><i class="bi bi-check-circle text-success me-2"></i>Mejor contraste y legibilidad</li>
+                                    <li><i class="bi bi-check-circle text-success me-2"></i>Colores suaves que no cansan la vista</li>
+                                    <li><i class="bi bi-check-circle text-success me-2"></i>Apropiados para entorno empresarial</li>
+                                </ul>
+                            </div>
+                            <div class="col-md-6">
+                                <h6 class="text-primary">🎨 Paleta</h6>
+                                <ul class="list-unstyled">
+                                    <li><strong>Primary:</strong> Azul profesional (#2563eb)</li>
+                                    <li><strong>Secondary:</strong> Verde empresarial (#059669)</li>
+                                    <li><strong>Success:</strong> Verde éxito (#10b981)</li>
+                                    <li><strong>Warning:</strong> Amarillo dorado (#f59e0b)</li>
+                                    <li><strong>Danger:</strong> Rojo suave (#ef4444)</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

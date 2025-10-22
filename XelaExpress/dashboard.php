@@ -48,94 +48,79 @@ if ($res) {
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
     <link rel="stylesheet" href="assets/css/style.css">
+    <link rel="stylesheet" href="assets/css/sidebar.css">
 </head>
 <body>
-    <?php include 'templates/navbar.php'; ?>
+    <?php include 'templates/sidebar.php'; ?>
     
-    <div class="container py-4">
-        <div class="welcome-section text-center mb-4 py-3">
+    <div class="container-fluid">
+        <!-- Panel de Control Compacto -->
+        <div class="welcome-section-compact text-center mb-4 py-3">
             <div class="mb-2">
-                <i class="bi bi-speedometer2" style="font-size: 2rem;"></i>
+                <i class="bi bi-speedometer2" style="font-size: 1.5rem;"></i>
             </div>
-            <h2 class="mb-2 h3">Panel de Control</h2>
+            <h3 class="mb-1 h4 text-white">Panel de Control</h3>
             <p class="text-light mb-0 small">Sistema de gestión XelaExpress</p>
+            <div class="user-greeting-compact mt-2">
+                <i class="bi bi-person-circle me-1"></i>
+                Bienvenido, <?= htmlspecialchars($_SESSION['usuario']) ?>
+            </div>
         </div>
 
-        <div class="row mb-4 g-4">
-            <div class="col-md-3 mb-3 fade-in delay-1">
+        <!-- Estadísticas Principales -->
+        <div class="row mb-4 g-3">
+            <div class="col-lg-3 col-md-6 mb-3 fade-in delay-1">
                 <div class="card stat-card h-100">
                     <div class="card-header d-flex align-items-center justify-content-between text-primary">
-                        <span class="fw-bold">Productos Registrados</span>
+                        <span class="fw-bold">Productos</span>
                         <i class="fas fa-boxes text-primary"></i>
                     </div>
                     <div class="card-body text-center py-3">
                         <h3 class="h2 fw-bold text-primary mb-0"><?php echo $total_productos; ?></h3>
+                        <p class="text-muted mb-0 small">En inventario</p>
                     </div>
                 </div>
             </div>
-            <div class="col-md-3 mb-3 fade-in delay-2">
+            <div class="col-lg-3 col-md-6 mb-3 fade-in delay-2">
                 <div class="card stat-card h-100">
                     <div class="card-header d-flex align-items-center justify-content-between text-success">
-                        <span class="fw-bold">Ventas Realizadas</span>
+                        <span class="fw-bold">Ventas</span>
                         <i class="fas fa-shopping-cart text-success"></i>
                     </div>
                     <div class="card-body text-center py-3">
                         <h3 class="h2 fw-bold text-success mb-0"><?php echo $total_ventas; ?></h3>
+                        <p class="text-muted mb-0 small">Realizadas</p>
                     </div>
                 </div>
             </div>
-            <div class="col-md-3 mb-3 fade-in delay-3">
+            <div class="col-lg-3 col-md-6 mb-3 fade-in delay-3">
                 <div class="card stat-card h-100">
                     <div class="card-header d-flex align-items-center justify-content-between text-warning">
-                        <span class="fw-bold">Ingresos Totales</span>
+                        <span class="fw-bold">Ingresos</span>
                         <i class="fas fa-chart-line text-warning"></i>
                     </div>
                     <div class="card-body text-center py-3">
                         <h3 class="h2 fw-bold text-warning mb-0">Q <?php echo number_format($total_ingresos, 2); ?></h3>
+                        <p class="text-muted mb-0 small">Totales</p>
                     </div>
                 </div>
             </div>
-            <div class="col-md-3 mb-3 fade-in delay-4">
+            <div class="col-lg-3 col-md-6 mb-3 fade-in delay-4">
                 <div class="card stat-card h-100">
                     <div class="card-header d-flex align-items-center justify-content-between text-danger">
-                        <span class="fw-bold">Clientes Registrados</span>
+                        <span class="fw-bold">Clientes</span>
                         <i class="fas fa-users text-danger"></i>
                     </div>
                     <div class="card-body text-center py-3">
                         <h3 class="h2 fw-bold text-danger mb-0"><?php echo $total_clientes; ?></h3>
+                        <p class="text-muted mb-0 small">Registrados</p>
                     </div>
                 </div>
             </div>
         </div>
         
-        <div class="row justify-content-center mb-5">
-            <div class="col-md-3 col-sm-6 mb-4 fade-in">
-                <a href="modules/ventas/" class="btn btn-module">
-                    <i class="fas fa-cash-register"></i>
-                    Ventas
-                </a>
-            </div>
-            <div class="col-md-3 col-sm-6 mb-4 fade-in delay-1">
-                <a href="modules/productos/" class="btn btn-module">
-                    <i class="fas fa-box-open"></i>
-                    Productos
-                </a>
-            </div>
-            <div class="col-md-3 col-sm-6 mb-4 fade-in delay-2">
-                <a href="modules/usuarios/" class="btn btn-module">
-                    <i class="fas fa-user-cog"></i>
-                    Usuarios
-                </a>
-            </div>
-            <div class="col-md-3 col-sm-6 mb-4 fade-in delay-3">
-                <a href="modules/clientes/" class="btn btn-module">
-                    <i class="fas fa-address-book"></i>
-                    Clientes
-                </a>
-            </div>
-        </div>
-        
-        <div class="row mb-5">
+        <!-- Gráficas -->
+        <div class="row mb-4">
             <div class="col-lg-6 mb-4 fade-in">
                 <div class="card">
                     <div class="card-header d-flex align-items-center">
@@ -163,13 +148,14 @@ if ($res) {
         </div>
     </div>
     
-    <footer class="bg-white py-4 mt-5 border-top">
-        <div class="container text-center">
-            <p class="mb-0 text-muted">© 2025 XelaExpress. Todos los derechos reservados.</p>
+    <footer class="bg-white py-3 mt-4 border-top">
+        <div class="container-fluid text-center">
+            <p class="mb-0 text-muted small">© 2025 XelaExpress. Todos los derechos reservados.</p>
         </div>
     </footer>
 
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="assets/js/sidebar.js"></script>
     <script>
     // Tu función para generar degradados que funciona perfectamente.
     function createGradient(ctx, color1, color2) {
@@ -180,13 +166,18 @@ if ($res) {
     }
     
     document.addEventListener('DOMContentLoaded', function() {
+        // Inicializar sidebar
+        if (window.sidebarManager) {
+            window.sidebarManager.updatePageTitle();
+        }
+        
         // --- Gráfica de Ventas por mes ---
         const ventasMesLabels = <?php echo json_encode(array_keys($ventas_mes)); ?>;
         const ventasMesData = <?php echo json_encode(array_values($ventas_mes)); ?>;
         
         const ctxBar = document.getElementById('ventasMesChart').getContext('2d');
         if (ctxBar) { // Verificar si el elemento existe
-            const barGradient = createGradient(ctxBar, 'rgba(106, 17, 203, 0.8)', 'rgba(74, 108, 247, 0.4)');
+            const barGradient = createGradient(ctxBar, 'rgba(37, 99, 235, 0.8)', 'rgba(5, 150, 105, 0.4)');
             
             new Chart(ctxBar, {
                 type: 'bar',
@@ -196,7 +187,7 @@ if ($res) {
                         label: 'Ventas',
                         data: ventasMesData,
                         backgroundColor: barGradient,
-                        borderColor: 'rgba(106, 17, 203, 1)',
+                        borderColor: 'rgba(37, 99, 235, 1)',
                         borderWidth: 1,
                         borderRadius: 8,
                         borderSkipped: false,
@@ -248,11 +239,11 @@ if ($res) {
                         label: 'Cantidad vendida',
                         data: productosData,
                         backgroundColor: [
-                            createGradient(ctxPie, '#4a6cf7', '#6a11cb'),
-                            createGradient(ctxPie, '#00c9a7', '#00d2ff'),
-                            createGradient(ctxPie, '#ff9a44', '#ffb224'),
-                            createGradient(ctxPie, '#ff3860', '#ff758c'),
-                            createGradient(ctxPie, '#a855f7', '#d946ef')
+                            createGradient(ctxPie, '#2563eb', '#1d4ed8'),
+                            createGradient(ctxPie, '#10b981', '#059669'),
+                            createGradient(ctxPie, '#f59e0b', '#d97706'),
+                            createGradient(ctxPie, '#ef4444', '#dc2626'),
+                            createGradient(ctxPie, '#06b6d4', '#0891b2')
                         ],
                         borderColor: 'rgba(255, 255, 255, 0.3)',
                         borderWidth: 2,
@@ -291,7 +282,6 @@ if ($res) {
         }
     });
     </script>
-    
     
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>

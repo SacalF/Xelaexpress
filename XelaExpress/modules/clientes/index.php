@@ -97,55 +97,134 @@ if ($result) {
     <title>Gestión de Clientes - XelaExpress</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="../../assets/css/style.css">
+    <link rel="stylesheet" href="../../assets/css/sidebar.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
 </head>
 <body>
-    <?php include '../../templates/navbar.php'; ?>
+    <?php include '../../templates/sidebar.php'; ?>
     
-    <div class="container py-4">
-        <h2 class="mb-4 display-3">Gestión de Clientes <i class="bi bi-people-fill text-danger"></i></h2>
-        <a href="../../dashboard.php" class="btn btn-secondary mb-3"><i class="bi bi-arrow-left"></i> Volver al dashboard</a>
+    <div class="container-fluid">
+        <div class="d-flex flex-column mb-4">
+            <div class="d-flex justify-content-between align-items-center mb-3 flex-wrap">
+                <h2 class="h3 mb-0">Gestión de Clientes</h2>
+                <div class="d-flex gap-2">
+                    <button class="btn btn-outline-primary btn-sm" onclick="exportarClientes()">
+                        <i class="bi bi-download me-1"></i>Exportar
+                    </button>
+                    <button class="btn btn-primary btn-sm" onclick="mostrarFormulario()">
+                        <i class="bi bi-plus-lg me-1"></i>Nuevo Cliente
+                    </button>
+                </div>
+            </div>
 
-    <?php if ($mensaje): ?>
-        <div class="alert alert-success"> <?= $mensaje ?> </div>
-    <?php endif; ?>
-    <?php if ($error): ?>
-        <div class="alert alert-danger"> <?= $error ?> </div>
-    <?php endif; ?>
+            <?php if ($mensaje): ?>
+                <div class="alert alert-success py-2 alert-dismissible fade show" role="alert">
+                    <?= htmlspecialchars($mensaje) ?>
+                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                </div>
+            <?php endif; ?>
+            <?php if ($error): ?>
+                <div class="alert alert-danger py-2 alert-dismissible fade show" role="alert">
+                    <?= htmlspecialchars($error) ?>
+                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                </div>
+            <?php endif; ?>
+        </div>
 
     <div class="card mb-4">
         <div class="card-header"><?php echo $cliente_editar ? 'Editar cliente' : 'Registrar nuevo cliente'; ?></div>
         <div class="card-body">
-            <form method="post">
-                <div class="row g-2">
+                <form method="post" class="needs-validation" novalidate>
                     <?php if ($cliente_editar): ?>
                         <input type="hidden" name="id" value="<?= htmlspecialchars($cliente_editar['id']) ?>">
                     <?php endif; ?>
-                    <div class="col-md-2">
-                        <input type="text" name="nombre" class="form-control" placeholder="Nombre" required value="<?= $cliente_editar ? htmlspecialchars($cliente_editar['nombre']) : '' ?>">
+                    
+                    <div class="row g-3">
+                        <div class="col-md-2">
+                            <label class="form-label">Nombre <span class="text-danger">*</span></label>
+                            <input type="text" 
+                                   name="nombre" 
+                                   class="form-control" 
+                                   placeholder="Ej: Juan" 
+                                   required 
+                                   minlength="2"
+                                   maxlength="50"
+                                   pattern="[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+"
+                                   title="Solo letras y espacios"
+                                   value="<?= $cliente_editar ? htmlspecialchars($cliente_editar['nombre']) : '' ?>">
+                        </div>
+                        
+                        <div class="col-md-2">
+                            <label class="form-label">Apellido <span class="text-danger">*</span></label>
+                            <input type="text" 
+                                   name="apellido" 
+                                   class="form-control" 
+                                   placeholder="Ej: Pérez" 
+                                   required 
+                                   minlength="2"
+                                   maxlength="50"
+                                   pattern="[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+"
+                                   title="Solo letras y espacios"
+                                   value="<?= $cliente_editar ? htmlspecialchars($cliente_editar['apellido']) : '' ?>">
+                        </div>
+                        
+                        <div class="col-md-2">
+                            <label class="form-label">Teléfono</label>
+                            <input type="tel" 
+                                   name="telefono" 
+                                   class="form-control" 
+                                   placeholder="Ej: 5025-1234"
+                                   pattern="[0-9+\-\s()]+"
+                                   maxlength="20"
+                                   title="Formato: números, +, -, espacios y paréntesis"
+                                   value="<?= $cliente_editar ? htmlspecialchars($cliente_editar['telefono']) : '' ?>">
+                            <div class="form-text text-muted">
+                                <small>Ej: 5025-1234 o 5025 1234</small>
+                            </div>
+                        </div>
+                        
+                        <div class="col-md-3">
+                            <label class="form-label">Correo electrónico</label>
+                            <input type="email" 
+                                   name="correo" 
+                                   class="form-control" 
+                                   placeholder="Ej: juan.perez@email.com"
+                                   maxlength="100"
+                                   value="<?= $cliente_editar ? htmlspecialchars($cliente_editar['correo']) : '' ?>">
+                            <div class="form-text text-muted">
+                                <small>Ej: usuario@dominio.com</small>
+                            </div>
+                        </div>
+                        
+                        <div class="col-md-2">
+                            <label class="form-label">Dirección</label>
+                            <input type="text" 
+                                   name="direccion" 
+                                   class="form-control" 
+                                   placeholder="Ej: Zona 10, Ciudad"
+                                   maxlength="200"
+                                   value="<?= $cliente_editar ? htmlspecialchars($cliente_editar['direccion']) : '' ?>">
+                            <div class="form-text text-muted">
+                                <small>Dirección completa (opcional)</small>
+                            </div>
+                        </div>
+                        
+                        <div class="col-md-1 d-flex flex-column gap-2">
+                            <?php if ($cliente_editar): ?>
+                                <button type="submit" name="actualizar" class="btn btn-success">
+                                    <i class="bi bi-check-lg"></i>
+                                </button>
+                                <a href="index.php" class="btn btn-secondary">
+                                    <i class="bi bi-x-lg"></i>
+                                </a>
+                            <?php else: ?>
+                                <button type="submit" name="registrar" class="btn btn-primary">
+                                    <i class="bi bi-plus-lg"></i>
+                                </button>
+                            <?php endif; ?>
+                        </div>
                     </div>
-                    <div class="col-md-2">
-                        <input type="text" name="apellido" class="form-control" placeholder="Apellido" required value="<?= $cliente_editar ? htmlspecialchars($cliente_editar['apellido']) : '' ?>">
-                    </div>
-                    <div class="col-md-2">
-                        <input type="text" name="telefono" class="form-control" placeholder="Teléfono" value="<?= $cliente_editar ? htmlspecialchars($cliente_editar['telefono']) : '' ?>">
-                    </div>
-                    <div class="col-md-3">
-                        <input type="email" name="correo" class="form-control" placeholder="Correo electrónico" value="<?= $cliente_editar ? htmlspecialchars($cliente_editar['correo']) : '' ?>">
-                    </div>
-                    <div class="col-md-2">
-                        <input type="text" name="direccion" class="form-control" placeholder="Dirección" value="<?= $cliente_editar ? htmlspecialchars($cliente_editar['direccion']) : '' ?>">
-                    </div>
-                    <div class="col-md-1">
-                        <?php if ($cliente_editar): ?>
-                            <button type="submit" name="actualizar" class="btn btn-success w-100">Actualizar</button>
-                            <a href="index.php" class="btn btn-secondary w-100 mt-2">Cancelar</a>
-                        <?php else: ?>
-                            <button type="submit" name="registrar" class="btn btn-primary w-100">Registrar</button>
-                        <?php endif; ?>
-                    </div>
-                </div>
-            </form>
+                </form>
         </div>
     </div>
 
@@ -188,5 +267,152 @@ if ($result) {
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script src="../../assets/js/sidebar.js"></script>
+<script>
+    // Inicializar sidebar
+    document.addEventListener('DOMContentLoaded', function() {
+        if (window.sidebarManager) {
+            window.sidebarManager.updatePageTitle();
+        }
+    });
+
+    // Función para mostrar formulario
+    function mostrarFormulario() {
+        const formulario = document.querySelector('.card');
+        if (formulario) {
+            formulario.scrollIntoView({ behavior: 'smooth' });
+            const primerInput = formulario.querySelector('input[name="nombre"]');
+            if (primerInput) {
+                primerInput.focus();
+            }
+        }
+    }
+
+    // Función para exportar clientes
+    function exportarClientes() {
+        const tabla = document.querySelector('.table');
+        if (tabla) {
+            const csv = tablaToCSV(tabla);
+            downloadCSV(csv, 'clientes.csv');
+        }
+    }
+
+    function tablaToCSV(tabla) {
+        let csv = [];
+        const filas = tabla.querySelectorAll('tr');
+        
+        filas.forEach(fila => {
+            const celdas = fila.querySelectorAll('td, th');
+            const filaCSV = Array.from(celdas).map(celda => {
+                return '"' + celda.textContent.replace(/"/g, '""') + '"';
+            }).join(',');
+            csv.push(filaCSV);
+        });
+        
+        return csv.join('\n');
+    }
+
+    function downloadCSV(csv, filename) {
+        const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+        const link = document.createElement('a');
+        const url = URL.createObjectURL(blob);
+        link.setAttribute('href', url);
+        link.setAttribute('download', filename);
+        link.style.visibility = 'hidden';
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+    }
+
+    // Validación de formularios Bootstrap
+    (function() {
+        'use strict';
+        window.addEventListener('load', function() {
+            var forms = document.getElementsByClassName('needs-validation');
+            var validation = Array.prototype.filter.call(forms, function(form) {
+                form.addEventListener('submit', function(event) {
+                    if (form.checkValidity() === false) {
+                        event.preventDefault();
+                        event.stopPropagation();
+                    }
+                    form.classList.add('was-validated');
+                }, false);
+            });
+        }, false);
+    })();
+
+    // Validación en tiempo real para campos de texto
+    function validateTextField(input, pattern, minLength = 2, maxLength = 50) {
+        const value = input.value.trim();
+        
+        if (value.length === 0) {
+            input.classList.remove('is-valid', 'is-invalid');
+            return;
+        }
+        
+        if (value.length >= minLength && value.length <= maxLength && pattern.test(value)) {
+            input.classList.remove('is-invalid');
+            input.classList.add('is-valid');
+        } else {
+            input.classList.remove('is-valid');
+            input.classList.add('is-invalid');
+        }
+    }
+
+    // Validación para nombres y apellidos
+    document.querySelectorAll('input[name="nombre"], input[name="apellido"]').forEach(input => {
+        input.addEventListener('input', function() {
+            const pattern = /^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$/;
+            validateTextField(this, pattern, 2, 50);
+        });
+    });
+
+    // Validación para teléfono
+    document.querySelector('input[name="telefono"]').addEventListener('input', function() {
+        const value = this.value.trim();
+        const pattern = /^[0-9+\-\s()]+$/;
+        
+        if (value.length === 0) {
+            this.classList.remove('is-valid', 'is-invalid');
+            return;
+        }
+        
+        if (pattern.test(value) && value.length >= 8 && value.length <= 20) {
+            this.classList.remove('is-invalid');
+            this.classList.add('is-valid');
+        } else {
+            this.classList.remove('is-valid');
+            this.classList.add('is-invalid');
+        }
+    });
+
+    // Validación para email
+    document.querySelector('input[name="correo"]').addEventListener('input', function() {
+        const value = this.value.trim();
+        const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        
+        if (value.length === 0) {
+            this.classList.remove('is-valid', 'is-invalid');
+            return;
+        }
+        
+        if (emailPattern.test(value) && value.length <= 100) {
+            this.classList.remove('is-invalid');
+            this.classList.add('is-valid');
+        } else {
+            this.classList.remove('is-valid');
+            this.classList.add('is-invalid');
+        }
+    });
+
+    // Auto-dismiss alerts after 5 seconds
+    setTimeout(function() {
+        var alerts = document.querySelectorAll('.alert');
+        alerts.forEach(function(alert) {
+            var bsAlert = new bootstrap.Alert(alert);
+            bsAlert.close();
+        });
+    }, 5000);
+</script>
 </body>
 </html> 
